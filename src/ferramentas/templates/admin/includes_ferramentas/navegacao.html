@@ -1,0 +1,26 @@
+{% load i18n %}
+<div id="content-related-extended">
+    <div class="arquivo" style="margin-top:15px;">
+    	<ul class="titulo_arquivos">
+        	<li><span style="color:#009966">Links &Uacute;teis</span></li>
+        </ul>
+        <div class="items" > 
+        {% if object_list %}
+         <table width="100%">
+        {% for object in object_list %}
+        {% ifchanged object.navegacao %}
+        {% if not forloop.first %}</ul></td></tr>{% endif %}
+        <tr >
+           <td style="border-bottom:dashed #eee 1px !important"> 
+        <h3 style="border-bottom:dashed #eee 1px !important">{{ object.navegacao }}</h3>
+        <ul class="menulist">
+        {% endifchanged %}
+        <li><a href="{{ object.link }}" class="{{ object.get_categoria_display }}">{{ object }}</a></li>		
+        {% endfor %}
+        </table>
+        {% else %}
+        <h3>N&atilde;o h&aacute; itens.</h3>
+        {% endif %}
+        </div>
+    </div>
+</div>

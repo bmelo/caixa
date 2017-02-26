@@ -1,0 +1,48 @@
+{% load i18n %}
+{% load thumbnail%}
+<div id="content-related-perfil" style="margin-bottom: 15px;">
+    
+        <ul class="titulo_perfil">
+        	<li><span>Perfil</span></li>
+         </ul>
+        {% if usuario_list %}
+        	{% for usuario in usuario_list %} 
+            <center>
+            <table >
+  				<tr>
+  					{% if usuario.foto %}
+                        <td align="center">
+                           <a href="/sistema/usuario/{{usuario.user.username}}/"> <img src='{% load adminmedia %}{% admin_media_prefix %}{{usuario.foto|thumbnail}}' /></a>
+                        </td>
+                    {% else %}
+                        <td>
+                           <a href="/sistema/usuario/{{usuario.user.username}}/">  <img src='{% load adminmedia %}{% admin_media_prefix %}img/admin/padrao.png'/></a>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th >
+                    	<div align="center"><p class="titulo_nome" align="center"><a href="/sistema/usuario/{{usuario.user.username}}/"> {{usuario.nome|title}}</a></p></div>
+                    </th>
+                </tr>
+             </table>
+             </center>
+            {% endfor %}
+        {% else%}
+        <center>
+        	 <table >
+  				<tr>
+                		<td>
+                            <img src='{% load adminmedia %}{% admin_media_prefix %}img/admin/padrao.png'/>
+                        </td>
+                        
+                 </tr>
+                 <tr>
+                 	<td>
+                    <div align="center"><p class="titulo_nome" >Administrador</p></div>
+                    </td>
+                 </tr>
+              </table>
+         </center>
+        {%endif%}
+</div>

@@ -1,0 +1,213 @@
+@page {
+  size: a5 landscape;
+  margin: 1cm;
+} 
+
+
+i, 
+em { 
+    font-style: italic; 
+}
+
+u {
+    text-decoration: underline;
+}
+
+s,
+strike {
+    text-decoration: line-through;
+}
+
+a {
+    text-decoration: underline;
+    color: blue;
+}
+
+ins {
+    color: green;
+    text-decoration: underline;
+}
+del {
+    color: red;
+    text-decoration: line-through;
+}
+
+pre,
+code,
+kbd,
+samp,
+tt {
+    font-family: "Courier New";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight:bold;
+    -pdf-keep-with-next: true;
+    -pdf-outline: true;    
+    -pdf-outline-open: false;
+    -keep-with-next: true;
+}
+
+h1 {
+    /*18px via YUI Fonts CSS foundation*/
+    font-size:138.5%; 
+    -pdf-outline-level: 0;
+}
+
+h2 {
+    /*16px via YUI Fonts CSS foundation*/
+    font-size:123.1%;
+    -pdf-outline-level: 1;
+}
+
+h3 {
+    /*14px via YUI Fonts CSS foundation*/
+    font-size:108%;
+    -pdf-outline-level: 2;
+}
+
+h4 {
+    -pdf-outline-level: 3;
+}
+
+h5 {
+    -pdf-outline-level: 4;
+}
+
+h6 {
+    -pdf-outline-level: 5;
+}
+
+
+address,
+blockquote,
+body,
+center,
+dl,
+dir,
+div,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+isindex,
+img,
+menu,
+noframes,
+noscript,
+ol,
+p,
+pre,
+table,
+th,
+tr,
+td,
+ul,
+li,
+dd,
+dt,
+pdftoc {
+    display: block;
+}
+
+
+#footer{display:none}
+
+
+@page {
+  margin: 1cm;
+  margin-bottom: 1.5cm;
+  @frame footer {
+    -pdf-frame-content: footer;
+    bottom: 0.1cm;
+    margin-left: 1cm;
+    margin-right: 1cm;
+    height: 1cm;
+  }
+}
+
+table th {
+text-align:center;
+vertical-align:middle;
+
+}
+
+table{
+font-size:10px;
+}
+table td{
+padding-left:3px;
+}
+.cabecalho table td, tr{
+padding-left:0px !important;
+padding-top: 0px !important;
+text-align:left;
+}
+
+.notas{
+text-align:center;
+}
+
+table tr {
+padding-top: 3px;
+}
+
+.row1 {
+    background: #EDF3FE;
+}
+
+.row2 {
+    background: white;
+}
+
+#boletim {
+padding:5px 0px 0px 0px;
+margin-top:5px;
+}
+
+#logo_boletim{
+float:left;
+}
+
+.titulos{
+background-color:#F5F5F5;
+}
+
+
+.nome_colegio{
+font-size:18px;
+}
+.endereco_colegio{
+font-weight:normal!important;
+font-size:10px;
+}
+.boletim_titulo{
+	font-weight:bold;
+	text-align:center;
+	margin-bottom:15px;
+}
+.boletim_dados{
+	margin-bottom:15px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:9px;
+}
+
+.cabecalho{
+text-align:center;
+font-weight:bolder;
+padding-bottom:20px;
+}
+
+.periodo tr{
+border-top:1px solid;
+}

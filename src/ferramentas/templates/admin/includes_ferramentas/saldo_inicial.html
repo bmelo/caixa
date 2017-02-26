@@ -1,0 +1,148 @@
+{% extends "admin/base_site2.html" %}
+{% load i18n %}
+{% load navegacao %}
+{% load aviso %}
+{% load perfil %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedInlineFieldsets.js"></script>
+<script language="javascript1.2">
+  function cloneMore(selector, type) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + type + '-TOTAL_FORMS').val();
+    newElement.find(':input').each(function() {
+      var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+      var id = 'id_' + name;
+      $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+    });
+    newElement.find('label').each(function() {
+      var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+      $(this).attr('for', newFor);
+    });
+    total++;
+    $('#id_' + type + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+  }
+
+</script>
+<style>
+  input[type="text"], textarea {
+    width:40px !important;
+  }
+  #produtos td, produtos th{border:1px solid !important; text-align:center}
+  #compras td, #compras th, #compras ul{text-align:center !important;}
+</style>
+{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/caixa/admin/">{% trans "Home" %}</a> &rsaquo; Cliente {{ pessoa.nome }}</div>{% endblock %}
+
+{%block esquerda%}
+{% if request.user.is_staff%}
+{% block perfilsidebar %}
+{% if request.user.is_authenticated %}
+{% get_perfil request.user %}
+{% endif %}
+{% endblock %}
+{% endif %}
+
+{% if app_list %}
+{% for app in app_list %}
+    	{%ifequal app.name "Auth"%}
+<div id="menu_app{{forloop.counter}}" class="menus"  >
+  <ul class="titulo_app">
+    <li>
+      <span> Autentica&ccedil;&atilde;o</span>
+    </li>
+  </ul>
+  <div class="app">
+    <table>
+      <tbody>
+
+        {% for model in app.models %}
+        <tr>
+          {% if model.perms.change %}
+          <th scope="row" width="65%"><span class="titulo_nome">{{ model.name }}</span></th>
+          {% endif %}
+          <td>
+            {% if model.perms.add %}
+            <div class="espacamento" >
+              <a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a>
+            </div >
+            {% endif %}
+
+            {% if model.perms.change %}
+            <div class="espacamento" >
+              <a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endifequal %}
+{% endfor %}
+{% else %}
+<p>{% trans "You don't have permission to edit anything." %}</p>
+{% endif %}
+{%endblock%}
+{%block direita%}
+
+{% block sidebar %}
+{% if user.is_authenticated and user.is_superuser %}
+<div id="content-related">
+  <div class="module" id="recent-actions-module">
+    <h2>{% trans 'Recent Actions' %}</h2>
+    <h3>{% trans 'My Actions' %}</h3>
+    {% load log %}
+    {% get_admin_log 10 as admin_log for_user user %}
+    {% if not admin_log %}
+    <p>{% trans 'None available' %}</p>
+    {% else %}
+    <ul class="actionlist">
+      {% for entry in admin_log %}
+      <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">{% if not entry.is_deletion %}<a href="{{ entry.get_admin_url }}">{% endif %}{{ entry.object_repr }}{% if not entry.is_deletion %}</a>{% endif %}<br /><span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{%endblock%}
+{% block content %}
+<div id="content-main">
+
+	 {% if request.user.is_authenticated %}
+  <div align="center" >
+    <div style="padding-top:10px;font-size:24px;text-align:center"> SALDO INICIAL</div>
+
+    <div width="100%" class="app" style="padding-left:20px" align="left">
+      <br/>
+      {%ifequal caixa.valor '0' %}
+        {% if conf2 %}
+        <div style="padding:0px;background-color:#fff;font-size:13px;">&Uacute;LTIMO FECHAMENTO: {{ conf2.valor}}</div>
+        {% endif %}
+        <form method="POST">
+          <div style="padding:0px;background-color:#fff;font-size:13px;">VALOR: {{ c.valor }}{{ c.valor.errors }}</div>
+          <br/>
+          <input type="submit" value="Salvar">
+        </form>
+        {%else%}
+          <div style="padding:0px;background-color:#fff;font-size:13px;">O CAIXA JÁ ESTÁ ABERTO</div>
+          <div style="padding:0px;background-color:#fff;font-size:13px;">SALDO DO CAIXA: R$ {{ conf.valor}}</div>
+          <br/>
+          <a href="../../">Voltar</a>
+        {%endifequal%}
+    </div>
+
+    {% else %}
+    <p>{% trans "You don't have permission to edit anything." %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% load i18n %}
+<div id="content-related-aviso">
+    <div class="arquivo"  style="margin-top:15px;">
+        <ul class="titulo_arquivos">
+        	<li><span style="color:#0099CC">Avisos</span></li>
+        </ul>
+        <div class="items" >
+        {% if aviso_list.object_list %}
+        <table width="100%">
+        	{% for aviso in aviso_list.object_list %}
+            <tr  >
+            	<td style="border-bottom:dashed #eee 1px !important"> 	
+                <h3 style="border-bottom:dashed #eee 1px !important">{{ aviso.titulo }}</h3>
+                   <ul class="actionlist" >
+                    <li>{{ aviso.texto }}</li>
+                    </ul>
+                 </td>
+             </tr>
+            {% endfor %}
+         </table>
+             <div class="pagination"  style="text-align:center;margin-bottom:10px">
+                    <span class="step-links">
+                        {% if aviso_list.has_previous %}
+                            <a href="?pa={{ aviso_list.previous_page_number }}">anterior<<</a>
+                        {% endif %}
+                
+                        <span class="current" >
+                            P&aacute;gina {{ aviso_list.number }} de {{ aviso_list.paginator.num_pages }} 
+                        </span>
+                
+                        {% if aviso_list.has_next %}
+                            <a href="?pa={{ aviso_list.next_page_number }}">>>pr&oacute;xima</a>
+                        {% endif %}                   
+                   </span>
+               </div>
+        {% else %}
+               	<h3>N&atilde;o h&aacute; avisos.</h3>
+        {%endif%}
+        </div>
+    </div>
+</div>

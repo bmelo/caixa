@@ -1,0 +1,19 @@
+{% load i18n %}
+<ul> 
+	<li id="toggle_academico"><a href="javascript://">{% trans "Menu" %}</a>
+            {% if menu_list %}
+    				{% for menu in menu_list %}
+                    	{% ifequal menu.name "Academico"%}
+                        	 <ul id="academico" class="menu">
+                    			{% for model in menu.models %}
+                        			{% if model.perms.change %}
+            							<li><a href="{{ model.admin_url }}"><strong>{{ model.name }}</strong></a></li>
+                            		{% endif %}
+                        		{% endfor %}
+                              </ul>
+                         {%endifequal%}      
+            		{% endfor %}
+            {% else %} 	
+             <li class="no-entries">{% trans "No Items Found." %}</li>
+            {% endif %}
+</ul>

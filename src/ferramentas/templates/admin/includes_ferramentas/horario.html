@@ -1,0 +1,113 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia %}
+{% load i18n %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="../../../../jsi18n/"></script>
+{% endblock %}
+{% block stylesheet %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css_ferramentas/ferramentas_ajuda.css" />{% endblock %}
+{% block coltype %}colSM{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/sistema/admin/">{% trans "Home" %}</a> &rsaquo; {% trans "Horario" %}</div>{% endblock %}
+{% block content %}
+
+<div id="content-main" align="center">
+
+<div class="boletim_titulo">Grade Curricular</div>
+<div class="boletim_dados">
+{% if turmas%}
+{%for turma in turmas%}
+	{% if forloop.last %}
+    	Nome: {{ turma.ano_letivo.aluno.nome|upper }}<br/>
+		Turma: {{ turma.turma.codigo}}  {{ turma.turma.serie }} s&eacute;rie do {{ turma.turma.grau }} grau<br/>
+        Turno: {{ turma.turma.periodo.turno }}<br/>
+        Ano Letivo: {{ turma.turma.periodo.ano }}<br/>
+	{%endif%}
+{% endfor %}
+{% else %}
+<h2>Aluno n&atilde;o est&aacute; matriculado.</h2>
+{% endif %}
+</div>
+{% if horarios %}
+{% regroup horarios by horario as horariolist %}
+	 <div class="module" style="width:700px;">
+           <table border="1"> 
+                <tr class="titulos">
+                    <th>Hor&aacute;rio</th>
+                    <th>Segunda-feira</th>
+                    <th>Ter&ccedil;a-feira</th>
+                    <th>Quarta-feira</th>
+                    <th>Quinta-feira</th>
+                    <th>Sexta-feira</th>
+                </tr>
+                {% for horario in horariolist %}
+                    <tr> 
+                         <td class="notas" >
+                         	{% ifequal horario.grouper '1' %}
+                            	7:10 - 8:00
+                            {% endifequal %}
+                            {% ifequal horario.grouper '2' %}
+                            	8:00 - 8:50
+                            {% endifequal %}
+                            {% ifequal horario.grouper '3' %}
+                            	8:50 - 9:40
+                            {% endifequal %}
+                            {% ifequal horario.grouper '4' %}
+                            	9:40 - 10:30
+                            {% endifequal %}
+                            {% ifequal horario.grouper '5' %}
+                            	10:30 - 11:20
+                            {% endifequal %}
+                            {% ifequal horario.grouper '6' %}
+                            	11:20 - 12:10
+                            {% endifequal %}
+                            {% ifequal horario.grouper '7' %}
+                            	13:10 - 14:00
+                            {% endifequal %}
+                            {% ifequal horario.grouper '8' %}
+                            	14:00 - 14:50
+                            {% endifequal %}
+                            {% ifequal horario.grouper '9' %}
+                            	14:50 - 15:40
+                            {% endifequal %}
+                            {% ifequal horario.grouper '10' %}
+                            	15:40 - 16:30
+                            {% endifequal %}
+                            {% ifequal horario.grouper '11' %}
+                            	16:30 - 17:20
+                            {% endifequal %}
+                            {% ifequal horario.grouper '12' %}
+                            	17:20 - 18:10
+                            {% endifequal %}
+                            {% ifequal horario.grouper '13' %}
+                            	19:10 - 20:00
+                            {% endifequal %}
+                            {% ifequal horario.grouper '14' %}
+                            	20:00 - 20:50
+                            {% endifequal %}
+                            {% ifequal horario.grouper '15' %}
+                            	20:50 - 21:40
+                            {% endifequal %}
+                            {% ifequal horario.grouper '16' %}
+                            	21:40 - 22:30
+                            {% endifequal %}
+                         </td>
+                         	
+                            	{% for h in horario.list|dictsort:"dia" %}
+                                        <td class="notas">
+                                         {{ h.disciplina.nome }}
+                                        </td>
+                                {% endfor %}
+                             
+                     </tr>
+                 {% endfor %}
+            </table>
+      </div> 
+{% else %}
+<h2>Aluno n&atilde;o est&aacute; matriculado.</h2>
+{%endif%}
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,108 @@
+{% block content %}
+<div id="content-main">
+
+	 {% if request.user.is_authenticated %}
+     	{% if vendas %}
+                
+                            <div align="center" >
+                                         <div style="padding-top:10px;font-size:24px;text-align:center"> CLIENTES EM ATRASO</div>
+                                              <br><br> 
+                                     <div class="app" style="padding-left:20px">
+                                  <div id="changelist" class="module filtered">   
+                                    <table width="100%" id="produtos">
+                                    <tbody>
+                                    <tr>
+                                    	<th>
+                                        	Nome
+                                        </th>
+                                        <th>
+                                        	Endereco
+                                        </th>
+                                        <th>
+                                        	Data da Venda
+                                        </th>
+                                        <th>
+                                        	Previs&atilde;o de Pagamento
+                                        </th>
+                                        <th>
+                                        	Divida
+                                        </th>
+                                    </tr>
+                                    {% for venda in vendas %}
+                                    <tr class="{% cycle 'row2' 'row1' %}">
+                                     
+                                        <td  style="border:none">
+                                            <div style="padding:0px;font-size:13px;"><a href="/admin/sispag/cliente/?id={{venda.cliente.id}}">{{ venda.cliente.nome|title}}</a></div>
+                                        </td>                                       
+                                  		
+                                        <td style="border:none">
+                                        	{% if venda.cliente.endereco %}
+                                            	{% for endereco in venda.cliente.endereco %}
+                                            		<div style="padding:0px;font-size:13px;">{{ endereco.logradouro|title }}
+                                                    </div>
+                                            	{% endfor %}
+                                             {% endif%}
+                                        </td>
+                                        
+                                    
+                                    
+                                        <td style="border:none">
+                                            <div style="padding:0px;font-size:13px;">{{ venda.data_venda|date:"d/m/Y"}}</div>
+                                        </td>                                       
+                                                                              
+                                                                               
+                                     
+                                     <td  style="border:none">
+                                            <div style="padding:0px;font-size:13px;">{{ venda.previsao_pagamento|date:"d/m/Y"}}</div>
+                                        </td>
+                                        <td  style="border:none">
+                                            <div style="padding:0px;font-size:13px;">R$ {{ venda.troco}}</div>
+                                        </td>    
+                                    </tr>
+                                    
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                </div>	
+                                       
+
+										<br><br>
+                                       <table width="100%" id="compras">
+                                           <tr>
+                                            	<td style="border:none">
+                                                	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
+                                                </td>
+                                            </tr>
+                                            
+                                            </table> 
+                                      
+
+
+
+
+
+                                       <br>
+                                	
+                                </div>
+                          
+            {% else %}
+                <div style="padding:10px;font-size:24px;text-align:center"> {{ erro }}</div>
+                <br><br>
+                                       <table width="100%" id="compras">
+                                           <tr>
+                                            	<td style="border:none">
+                                                	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
+                                                </td>
+                                            </tr>
+                                            
+                                            </table> 
+            {% endif %}
+              
+       {% endif %}
+                              </div>
+                            
+
+</div>
+{% endblock %}
+
+</p>

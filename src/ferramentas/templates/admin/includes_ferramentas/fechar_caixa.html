@@ -1,0 +1,313 @@
+{% extends "admin/base_site2.html" %}
+{% load i18n %}
+{% load navegacao %}
+{% load aviso %}
+{% load perfil %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedInlineFieldsets.js"></script>
+<script language="javascript1.2">
+  function cloneMore(selector, type) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + type + '-TOTAL_FORMS').val();
+    newElement.find(':input').each(function() {
+      var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+      var id = 'id_' + name;
+      $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+    });
+    newElement.find('label').each(function() {
+      var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+      $(this).attr('for', newFor);
+    });
+    total++;
+    $('#id_' + type + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+  }
+
+</script>
+<style>
+  input[type="text"], textarea {
+    width:40px !important;
+  }
+  #produtos td, #produtos th{text-align:center}
+  #compras td, #compras th, #compras ul{text-align:center !important;}
+</style>
+{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> &rsaquo; Cliente {{ pessoa.nome }}</div>{% endblock %}
+
+{%block esquerda%}
+{% if request.user.is_staff%}
+{% block perfilsidebar %}
+{% if request.user.is_authenticated %}
+{% get_perfil request.user %}
+{% endif %}
+{% endblock %}
+{% endif %}
+
+{% if app_list %}
+{% for app in app_list %}
+    	{%ifequal app.name "Auth"%}
+<div id="menu_app{{forloop.counter}}" class="menus"  >
+  <ul class="titulo_app">
+    <li>
+      <span> Autentica&ccedil;&atilde;o</span>
+    </li>
+  </ul>
+  <div class="app">
+    <table>
+      <tbody>
+
+        {% for model in app.models %}
+        <tr>
+          {% if model.perms.change %}
+          <th scope="row" width="65%"><span class="titulo_nome">{{ model.name }}</span></th>
+          {% endif %}
+          <td>
+            {% if model.perms.add %}
+            <div class="espacamento" >
+              <a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a>
+            </div >
+            {% endif %}
+
+            {% if model.perms.change %}
+            <div class="espacamento" >
+              <a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endifequal %}
+{% endfor %}
+{% endif %}
+{%endblock%}
+{%block direita%}
+
+{% block sidebar %}
+{% if user.is_authenticated and user.is_superuser %}
+<div id="content-related">
+  <div class="module" id="recent-actions-module">
+    <h2>{% trans 'Recent Actions' %}</h2>
+    <h3>{% trans 'My Actions' %}</h3>
+    {% load log %}
+    {% get_admin_log 10 as admin_log for_user user %}
+    {% if not admin_log %}
+    <p>{% trans 'None available' %}</p>
+    {% else %}
+    <ul class="actionlist">
+      {% for entry in admin_log %}
+      <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">{% if not entry.is_deletion %}<a href="{{ entry.get_admin_url }}">{% endif %}{{ entry.object_repr }}{% if not entry.is_deletion %}</a>{% endif %}<br /><span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{%endblock%}
+{% block content %}
+<div id="content-main">
+
+	 {% if request.user.is_authenticated %}
+     <div align="center" >
+    <div width="100%" class="app" style="padding-left:20px" align="left">
+      <br/>
+      {% if caixas %}
+      <div id="changelist" class="module filtered">
+            <table width="100%" border="1px" id="produtos">
+            	<tr>
+                	<th colspan="7">
+                       <div style="text-align:center">HISTORICO DO CAIXA DO DIA</div>
+                    </th>
+                </tr>
+                
+            	<tr>
+                	<th>
+                    	Data Hora Abertura
+                    </th>
+                    <th>
+                    	Valor Inicial
+                    </th>
+                    <th>
+                    	Valor
+                    </th>
+                    <th>
+                    	Usuario Abertura
+                    </th>
+                    <th>
+                    	Data Hora Fechamento
+                    </th>
+                    <th>
+                    	Usuario Fechamento
+                    </th>
+                    
+                </tr>
+            
+      
+      		{% for c in caixas %}
+            	<tr class="{% cycle 'row2' 'row1'%}">
+                	<td>
+                    	{{ c.data_hora_abertura|date:"d/m/Y" }} às {{ c.data_hora_abertura|time:"H:i"}}h
+                    </td>
+                    <td>
+                    	R$ {{ c.valor_inicial}}
+                    </td>
+                    <td>
+                    	R$ {{ c.valor }}
+                    </td>
+                    
+                    <td>
+                    	{{ c.usuario_abertura }}
+                    </td>
+                    
+                    <td>
+                    	{%  if c.data_hora_fechamento %}{{ c.data_hora_fechamento|date:"d/m/Y"  }}  às {{ c.data_hora_fechamento|time:"H:i" }}h {% endif %}
+                    </td>
+                    
+                    <td>
+                    	{% if c.usuario_fechamento %}{{ c.usuario_fechamento }} {% endif %}
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+            </table>
+       </div>
+      {% endif%}
+      
+       <br>
+       <br>
+      {% if retiradas %}
+      	 <div id="changelist" class="module filtered">
+            <table width="100%" border="1px" id="produtos">
+            	<tr>
+                	<th colspan="4">
+                       <div style="text-align:center">HISTORICO DE RETIRADAS DO DIA</div>
+                    </th>
+                </tr>   
+            	<tr>
+                	<th>
+                    	Data Hora 
+                    </th>
+                    <th>
+                    	Valor 
+                    </th>                    
+                    <th>
+                    	Usuario 
+                    </th>
+                    <th>
+                    	Observação
+                    </th>                    
+                </tr>
+            
+      
+      		{% for r in retiradas %}
+            	<tr class="{% cycle 'row2' 'row1'%}">
+                	<td>
+                    	{{ r.data_hora|date:"d/m/Y" }} às {{ r.data_hora|time:"H:i"}}h
+                    </td>
+                    <td>
+                    	R$ {{ r.valor }}
+                    </td>
+                    
+                    <td>
+                    	{{ r.usuario}}
+                    </td>
+                    
+                    <td>
+                    	{{ r.observacao  }}
+                    </td>
+                                       
+                </tr>
+            {% endfor %}
+          </table>
+       </div>
+       <br>
+       <br>
+      {% endif %}
+      <div id="changelist" class="module filtered">
+            <table width="100%" border="1px" id="produtos">
+            	<tr>
+                	<th colspan="3">
+                       <div style="text-align:center">HISTORICO FINAL DO DIA</div>
+                    </th>
+                </tr>   
+            	<tr>
+                	<th>
+                    	Valor Final Caixa
+                    </th>
+                    <th>
+                    	Valor Total Arrecadado
+                    </th>                    
+                    <th>
+                    	Valor Total de Retiradas
+                    </th>                   
+                </tr>
+            
+      
+            	<tr class="row2%}">
+                	<td>
+                    	R$ {{ total_caixa }}
+                    </td>
+                    <td>
+                    	R$ {{ total }}
+                    </td>
+                    
+                    <td>
+                    	R$ {{total_retiradas}}
+                    </td>
+                                       
+                </tr>
+           </table> 
+       </div>
+     {% if erro %}
+     	{{ erro }}
+     {% else %}
+		{% if caixa %}
+        <div style="padding:10px;font-size:16px;text-align:center">
+        	<form method="POST">
+                 <fieldset class="module aligned ">
+  					<h2>FECHAMENTO DE CAIXA - VALOR NO CAIXA R$ {{ caixa.valor }}</h2>
+  
+  
+      				<div class="form-row fechar  ">
+                        <div>
+                <input type="hidden" name="fechar" value="1">
+                <p><input type="submit" value="Fechar caixa" /></p>
+                		</div>
+                     </div>
+                    </fieldset>
+                   
+             </form>
+        	
+        {% else %}
+        	 <fieldset class="module aligned ">
+  					<h2>FECHAMENTO DE CAIXA</h2>
+  
+  
+      				<div class="form-row info  ">
+                        <div>
+            			O CAIXA SE ENCONTRA FECHADO
+            		</div>
+                    </div>
+              </fieldset>
+        {% endif%}
+       </div> 
+    {% endif%}
+      <br><br>
+             <a href="../../"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
+       
+    </div>
+
+    {% else %}
+    <p>{% trans "You don't have permission to edit anything." %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

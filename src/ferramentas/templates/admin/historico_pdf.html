@@ -1,0 +1,75 @@
+{% block content %}
+<div id="content-main">
+<div class="cabecalho">
+{% if colegio %}
+	{%for colegio in colegio %}
+		{% if forloop.last %}
+        	<table>
+            	<tr>
+                	<td width="100px"><img src='{% load mediaroot %}{% media_root %}{{colegio.logo}}'/></td>
+                   <td ><span class="nome_colegio">{{ colegio.nome|upper }}</span><br/>
+                    <span class="endereco_colegio">{{ colegio.endereco.logradouro|title }} , {{ colegio.endereco.bairro|title}}   <br/>
+                    {{ colegio.endereco.cidade }} - {{ colegio.endereco.estado }} Cep:{{colegio.endereco.cep}}<br/> 
+                    CNPJ: {{ colegio.cnpj }} Tel:{{colegio.endereco.pessoa.telefone}}</span>
+                    
+                    </td>
+                </tr>
+             </table>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</div>
+
+<div class="boletim_titulo">Hist&oacute;rico Escolar</div>
+<div class="boletim_dados">
+{% if boletins%}
+
+{%for boletim in boletins%}
+	{% if forloop.last %}
+    	Nome: {{ boletim.ano_letivo.aluno.nome|upper }}<br/>
+	{%endif%}
+{% endfor %}
+{%for turma in turmas%}
+	{% if forloop.last %}
+		Turma: {{ turma.turma.codigo}}  {{ turma.turma.serie }} s&eacute;rie do {{ turma.turma.grau }} grau<br/>
+        Turno: {{ turma.turma.periodo.turno }}<br/>
+        Ano Letivo: {{ turma.turma.periodo.ano }}<br/>
+	{%endif%}
+{% endfor %}
+</div>
+<table width="100%" >
+<tr>
+	<td width="8%" >Per&iacute;odo</td>
+    <td width="7%" >C&oacute;digo</td>
+    <td width="48%">Nome</td>
+    <td width="10%" class="notas">M&eacute;dia</td>
+    <td width="17%" class="notas">Conceito</td>
+    <td width="10%" class="notas">CH</td>
+</tr>
+{% regroup boletins by ano as boletimlist %}
+    {% for boletim in boletimlist %}
+                {% for b in boletim.list %}
+                	{% if forloop.first %}
+                        <tr style="border-top:1px solid #000000;"> 
+                    		<td class="periodo" >{{ boletim.grouper }}</td>
+                        {% else %}
+                        <tr>
+                    		<td>&nbsp;</td>
+                        {% endif %}
+                        <td scope="row" >{{ b.codigo }}</td>
+                        <td scope="row" >{{ b.disciplina|title }}</td>
+                        <td class="notas">{% if b.nota_media %}{{ b.nota_media }} {% else %} # {% endif %}</td>
+                        <td class="notas">{% if b.aprovado %}{{ b.aprovado }} {% else %} # {% endif %}</td>
+                        <td class="row">&nbsp;</td>
+                    </tr>
+                {%endfor%}
+    {% endfor %}
+ </table>
+{% else %}
+<h2>Aluno n&atilde;o est&aacute; matriculado.</h2>
+{%endif%}
+</div>
+{% endblock %}
+
+
+

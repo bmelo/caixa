@@ -1,0 +1,113 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia %}
+{% load i18n %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="../../../../jsi18n/"></script>
+{% endblock %}
+{% block stylesheet %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css_ferramentas/ferramentas_ajuda.css" />{% endblock %}
+{% block coltype %}colSM{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/sistema/admin/">{% trans "Home" %}</a> &rsaquo; {% trans "Historico" %}</div>{% endblock %}
+{% block content %}
+<div id="content-main" >
+
+<div class="cabecalho" style="margin-left:60px">
+{% if colegio %}
+	{%for colegio in colegio %}
+		{% if forloop.last %}
+        	<table>
+            	<tr>
+                	<td width="100px" style="border:none;"><img src='{% admin_media_prefix %}{{colegio.logo}}'/></td>
+                   <td style="border:none;"><span class="nome_colegio">{{ colegio.nome|upper }}</span><br/>
+                    <span class="endereco_colegio">{{ colegio.endereco.logradouro|title }} , {{ colegio.endereco.bairro|title}}   <br/>
+                    {{ colegio.endereco.cidade }} - {{ colegio.endereco.estado }} Cep:{{colegio.endereco.cep}}<br/> 
+                    CNPJ: {{ colegio.cnpj }} Tel:{{colegio.endereco.pessoa.telefone}}</span>
+                    
+                    </td>
+                </tr>
+             </table>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</div>
+<div class="boletim_titulo">Hist&oacute;rico Escolar</div>
+<div align="center">
+<div class="boletim_dados">
+{% if boletins%}
+
+{%for boletim in boletins%}
+	{% if forloop.last %}
+    <div class="module" style="width:890px;">
+    	<table width="100%">
+        	<tr>
+            	<td colspan="2">
+               <b>Aluno :  {{ boletim.ano_letivo.aluno.id }} - {{ boletim.ano_letivo.aluno.nome|title }}</b>
+                </td>
+                <td colspan="2" align="right">
+                	<b>Ano Letivo: {{ boletim.ano_letivo.ano }}</b>
+                </td>
+            </tr>
+           
+            <tr>
+            	<td>Curso :  {{ boletim.ano_letivo.turma.serie }} ANO DO {{ boletim.ano_letivo.turma.grau|upper }}</td>
+                <td>Turma :  {{ boletim.ano_letivo.turma.serie }}{{ boletim.ano_letivo.turma.codigo}}</td>
+                <td>Nascido : {{ boletim.ano_letivo.aluno.data_nascimento|date:"d/m/Y"}}</td>
+                <td>Natural de : {{ boletim.ano_letivo.aluno.naturalidade_estado}} {{ boletim.ano_letivo.aluno.naturalidade_cidade}}</td>
+            </tr>
+            <tr>
+            	<td colspan="2">
+                	Filia&ccedil;&atilde;o : {{ boletim.ano_letivo.aluno.mae|title }} e {{ boletim.ano_letivo.aluno.pai|title }}
+                </td>
+                <td colspan="2">
+                	<b>Situa&ccedil;&atilde;o do(a) aluno(a) : {% ifequal boletim.ano_letivo.ativo 1 %} Cursando {% else %} Inativo {% endifequal%}</b>
+                </td>
+            </tr>
+        </table>
+        </div>
+	{%endif%}
+{% endfor %}
+</div>
+<div class="module" style="width:890px;" >
+<table width="100%" >
+<tr>
+	<td width="12%" >Per&iacute;odo</td>
+    <td width="14%" >Disc. C&oacute;digo</td>
+    <td width="29%">Disc. Nome</td>
+    <td width="10%" class="notas">M&eacute;dia Final</td>
+    <td width="10%" class="notas">Total Faltas</td>
+    <td width="10%" class="notas">Conceito</td>
+    <td width="15%" class="notas">C.H. Anual</td>
+</tr>
+{% regroup boletins by ano as boletimlist %}
+    {% for boletim in boletimlist %}
+                {% for b in boletim.list %}
+                
+                	{% if forloop.first %}
+                    
+                        <tr style="border-top:1px solid  #CCCCCC !important;"> 
+                    		<td class="periodo" style="border-bottom:none !important" >{{ boletim.grouper }}</td>
+                        {% else %}
+                        <tr>
+                    		<td style="border-bottom:none !important">&nbsp;</td>
+                        {% endif %}
+                        <td scope="row" style="border-bottom:none !important">{{ b.disciplina.codigo }}</td>
+                        <td scope="row" style="border-bottom:none !important" >{{ b.disciplina.nome|title }}</td>
+                        <td class="notas" style="border-bottom:none !important">{% if b.media_final %}{{ b.media_final }} {% else %} {% endif %}</td>
+                        <td class="notas" style="border-bottom:none !important">{% if b.total_faltas %}{{ b.total_faltas }} {% else %}  {% endif %}</td>
+                        <td class="notas" style="border-bottom:none !important">{% if b.situacao %}{{ b.situacao }} {% else %}  {% endif %}</td>
+                        <td class="notas" style="border-bottom:none !important">{% if b.carga_horaria %}{{ b.carga_horaria }} {% else %}  {% endif %}</td>
+                    </tr>
+                {%endfor%}
+    {% endfor %}
+ </table>
+ </div>
+ </div>
+{% else %}
+<h2>Aluno n&atilde;o est&aacute; matriculado.</h2>
+{%endif%}
+</div>
+{% endblock %}
+
+
+

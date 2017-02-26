@@ -1,0 +1,36 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia %}
+{% load i18n %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="../../../../jsi18n/"></script>
+{% endblock %}
+{% block stylesheet %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css_ferramentas/ferramentas_ajuda.css" />{% endblock %}
+{% block coltype %}colSM{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/sistema/admin/">{% trans "Home" %}</a> &rsaquo; Impress&atilde;o de Boleto</div>{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+<div class="boletim" style="background-color:#FFFFFF">
+
+<table>
+                <tr>
+                	<p>Escolha o m&ecirc;s abaixo para imprimir o boleto:</p>
+                </tr>
+                {% for mes in meses %}
+                
+                    <tr> 
+                        <td scope="row" ><a href='/sistema/boleto/bb/?mes={{forloop.counter}}' target="_blank">{{mes}}</a></td>
+                    </tr>
+                
+                {%endfor%}
+  </table>
+</div>
+</div>
+{% endblock %}
+
+
+
+

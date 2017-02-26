@@ -1,0 +1,95 @@
+{% extends "admin/base_site2.html" %}
+{% load i18n %}
+{% load navegacao %}
+{% load mensagens %}
+{% load perfil %}
+{% load turma %}
+{% load download %}
+{% load calendario %}
+{% load professores %}
+{% block stylesheet %}
+{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css
+{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedInlineFieldsets.js"></script>
+<style type="text/css">
+<!--
+textarea {
+width:450px !important;
+}
+-->
+</style>
+{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/sistema/admin/">{% trans "Home" %}</a></div>{% endblock %}
+
+{%block esquerda%}
+{% if request.user.is_staff%}
+{% block perfilsidebar %}
+{% if request.user.is_authenticated %}
+{% get_perfil pessoa.user %}
+{% endif %}
+{% endblock %}
+{% endif %}
+{%endblock%}
+{%block direita%}
+<div id="content-related-turma">
+<div id="menu_turma" class="turma" style="width:100%;" >
+        	<ul class="titulo_direita">
+                    <li>
+                        <span>For&uacute;m</span>
+                    </li>
+             </ul>
+             <div >
+           <table> 
+                <tbody>
+                <tr>
+                	<th scope="row" width="65%" style="border:none"><span class="titulo_nome" style="padding-left:10px">For&uacute;m</span></th>
+                    <td style="border:none"><a href="/sistema/forum/" class="viewlink" >{% trans 'Visualizar' %}</a></td>
+                </tr>
+                </tbody>
+           </table>
+           </div>
+          </div>
+</div>
+{% for grupo in request.user.groups.all %}
+	{% ifequal grupo.name "Alunos" %}
+    	{% block turmasidebar %}
+            {% get_turma request pessoa.user %}
+         {% endblock %}
+         
+         {% block professoressidebar %}
+            {% get_professores request pessoa.user %}
+         {% endblock %}
+    {% endifequal%}
+{% endfor%}
+
+{%endblock%}
+{% block content %}
+<div id="content-main">
+<form method="POST" >
+	  <table>
+      	
+        <tbody>
+        <tr>
+        	<th style="border:none">{{ f.mensagem.label_tag }}</th>
+			<td style="border:none">
+						{{ f.mensagem}}<br />
+						
+						{{ f.mensagem.errors }}
+			</td>
+		</tr>
+        
+	  </tbody></table>
+	 <div align="right" style="padding-bottom:15px"> <input type="submit" value="postar"  /></div>
+  </form>
+{% block avisosidebar %}
+{% if request.user.is_authenticated %}
+{% get_mensagens request pessoa %}
+{% endif %}
+{% endblock %}
+</div>
+{% endblock %}
+
+</p>

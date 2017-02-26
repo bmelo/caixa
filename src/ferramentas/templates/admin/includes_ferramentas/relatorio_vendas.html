@@ -1,0 +1,361 @@
+{% extends "admin/base_site2.html" %}
+{% load i18n %}
+{% load navegacao %}
+{% load aviso %}
+{% load perfil %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedInlineFieldsets.js"></script>
+<script language="javascript1.2">
+function cloneMore(selector, type) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + type + '-TOTAL_FORMS').val();
+    newElement.find(':input').each(function() {
+        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+        var id = 'id_' + name;
+        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+    });
+    newElement.find('label').each(function() {
+        var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+        $(this).attr('for', newFor);
+    });
+    total++;
+    $('#id_' + type + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+}
+
+</script>
+<style>
+input[type="text"], textarea {
+width:40px !important;
+}
+#produtos td, #produtos th{text-align:center; padding:3px !important;}
+.tr1{
+background-color:#F8F8F8;
+}
+.tr2{
+background-color:#FFF;
+}
+</style>
+{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> &rsaquo; Rel&aacute;torio de Vendas</div>{% endblock %}
+
+{%block esquerda%}
+{% if request.user.is_staff%}
+{% block perfilsidebar %}
+{% if request.user.is_authenticated %}
+{% get_perfil request.user %}
+{% endif %}
+{% endblock %}
+{% endif %}
+
+{% if app_list %}
+    {% for app in app_list %}
+    	{%ifequal app.name "Auth"%}
+        <div id="menu_app{{forloop.counter}}" class="menus"  >
+       		 <ul class="titulo_app">
+                    <li>
+                        <span> Autentica&ccedil;&atilde;o</span>
+                    </li>
+             </ul>
+         <div class="app">
+        <table>
+        <tbody>
+        	
+        {% for model in app.models %}
+            <tr>
+            {% if model.perms.change %}
+                <th scope="row" width="65%"><span class="titulo_nome">{{ model.name }}</span></th>
+            {% endif %}
+            <td>
+            {% if model.perms.add %}
+            	 <div class="espacamento" >
+               	 	<a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a>
+                </div >
+            {% endif %}
+            
+            {% if model.perms.change %}
+                <div class="espacamento" >
+               		 <a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a>
+                </div>
+            {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+        </div>
+        {% endifequal %}
+    {% endfor %}
+
+{% endif %}
+{%endblock%}
+{%block direita%}
+
+{% block sidebar %}
+{% if user.is_authenticated and user.is_superuser %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Recent Actions' %}</h2>
+        <h3>{% trans 'My Actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% trans 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">{% if not entry.is_deletion %}<a href="{{ entry.get_admin_url }}">{% endif %}{{ entry.object_repr }}{% if not entry.is_deletion %}</a>{% endif %}<br /><span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{%endblock%}
+{% block content %}
+<div id="content-main">
+
+	 {% if request.user.is_authenticated %}
+     	{% if erro %}
+                <div style="padding:10px;font-size:24px;text-align:center"> {{ erro }}</div>
+                <br><br>
+        {% else %}
+                
+                 <div align="center" >
+                                         <div style="padding-top:10px;font-size:24px;text-align:center">REL&Aacute;TORIO DE VENDAS</div> <br> <br>
+                                               
+    <div class="app" style="padding-left:20px">
+                                     <div id="changelist" class="module filtered">
+                                    <table width="100%" id="produtos">
+                                    <tbody>
+                                    <tr>
+                                    	<th style="width:40%">
+                                        	Tipo de Venda
+                                      </th>
+                                        <th style="width:20%">
+                                        	Quantidade
+                                      </th>
+                                        <th style="width:20%">
+                                        	Total
+                                      </th>
+                                        <th>
+                                        	Saldo devedor
+                                      </th>
+                                    </tr>
+                                    <tr class="row2">
+                                   	  <td>
+                                        	&Agrave; Vista
+                                      </td>
+                                        <td>
+                                        	{{ venda_avista.count }}
+                                        </td>
+                                        <td>
+                                        	R$ {{ total_avista }}
+                                        </td>
+                                        <td>
+                                        	R$ 0.0
+                                        </td>
+                                    </tr>
+                                     <tr class="row1">
+                                    	<td>
+                                        	&Agrave; Prazo
+                                        </td>
+                                        <td>
+                                        	{{ venda_aprazo.count }}
+                                        </td>
+                                        <td>
+                                        	R$ {{ total_aprazo }}
+                                        </td>
+                                        <td>
+                                        	R$ {{ saldo_devedor_prazo }}
+                                        </td>
+                                    </tr>
+                                     <tr class="row2">
+                                    	<td>
+                                        	&Agrave; Cart&atilde;o
+                                        </td>
+                                        <td>
+                                        	{{ venda_acartao.count }}
+                                        </td>
+                                        <td>
+                                        	R$ {{ total_acartao }}
+                                        </td>
+                                        <td>
+                                        	R$ 0.0
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </div>	
+                                       
+
+										<br><br>
+                                      
+                   </div>
+                          
+            
+                                       
+            {% endif %}					
+            						<form method="POST"> 
+                                    <fieldset class="module aligned ">
+  												<h2>Selecione um intervalo para visualizar o relat&oacute;rio</h2>        
+                                            	<div class="form-row inicio  ">
+                       							 	<div>
+                                                 		<label> Inicio :</label>
+                                                     <select id="id_dia_inicio" name="dia_inicio">
+                                                        <option selected="selected" value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                        <option value="18">18</option>
+                                                        <option value="19">19</option>
+                                                        <option value="20">20</option>
+                                                        <option value="21">21</option>
+                                                        <option value="22">22</option>
+                                                        <option value="23">23</option>
+                                                        <option value="24">24</option>
+                                                        <option value="25">25</option>
+                                                        <option value="26">26</option>
+                                                        <option value="27">27</option>
+                                                        <option value="28">28</option>
+                                                        <option value="29">29</option>
+                                                        <option value="30">30</option>
+                                                        <option value="31">31</option>
+                                                     </select>
+                                                     <select id="id_mes_inicio" name="mes_inicio">
+                                                        <option selected="selected" value="1">Janeiro</option>
+                                                        <option value="2">Fevereiro</option>
+                                                        <option value="3">Mar&ccedil;o</option>
+                                                        <option value="4">Abril</option>
+                                                        <option value="5">Maio</option>
+                                                        <option value="6">Junho</option>
+                                                        <option value="7">Julho</option>
+                                                        <option value="8">Agosto</option>
+                                                        <option value="9">Setembro</option>
+                                                        <option value="10">Outubro</option>
+                                                        <option value="11">Novembro</option>
+                                                        <option  value="12">Dezembro</option>
+                                                     </select>
+                                                     <select id="id_ano_inicio" name="ano_inicio">
+                                                     {% for ano in anos %}
+                                                        <option value="{{ ano }}">{{ ano }}</option>
+                                                     {% endfor %}
+                                                     </select>
+                                               </div>
+                                            </div>
+                                           <div class="form-row termino  ">
+                       							 	<div>
+                                            	<label> T&eacute;rmino :</label>
+                                                     <select id="id_dia_termino" name="dia_termino">
+                                                        <option selected="selected" value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                        <option value="18">18</option>
+                                                        <option value="19">19</option>
+                                                        <option value="20">20</option>
+                                                        <option value="21">21</option>
+                                                        <option value="22">22</option>
+                                                        <option value="23">23</option>
+                                                        <option value="24">24</option>
+                                                        <option value="25">25</option>
+                                                        <option value="26">26</option>
+                                                        <option value="27">27</option>
+                                                        <option value="28">28</option>
+                                                        <option value="29">29</option>
+                                                        <option value="30">30</option>
+                                                        <option value="31">31</option>
+                                                     </select>
+                                                     <select id="id_mes_termino" name="mes_termino">
+                                                        <option selected="selected" value="1">Janeiro</option>
+                                                        <option value="2">Fevereiro</option>
+                                                        <option value="3">Mar&ccedil;o</option>
+                                                        <option value="4">Abril</option>
+                                                        <option value="5">Maio</option>
+                                                        <option value="6">Junho</option>
+                                                        <option value="7">Julho</option>
+                                                        <option value="8">Agosto</option>
+                                                        <option value="9">Setembro</option>
+                                                        <option value="10">Outubro</option>
+                                                        <option value="11">Novembro</option>
+                                                        <option  value="12">Dezembro</option>
+                                                     </select>
+                                                     <select id="id_ano_termino" name="ano_termino">
+                                                     {% for ano in anos %}
+                                                        <option value="{{ ano }}">{{ ano }}</option>
+                                                     {% endfor %}
+                                                     </select>
+                                                 </div>
+                                              </div>
+                                              <div class="form-row hoje  ">
+                       							 	<div> 
+                                                    	<label >Relat&oacute;rio de hoje </label>	
+                                        					<input type="checkbox" name="hoje" id = 'id_hoje' value="1">
+                                                     </div>
+                                               </div>
+                                               <div class="form-row mes  ">
+                       							 	<div> 
+                                                    	<label >Relat&oacute;rio do Mes </label>	
+                                        					<input type="checkbox" name="mes" id = 'id_mes' value="1">
+                                                     </div>
+                                               </div>
+                                                <div class="form-row enviar  ">
+                       							 	<div style="float:right"> 
+                                                       <p><input type="submit" value="Enviar" /></p>
+                                          			</div>
+                                                </div>
+                                                
+                                            </fieldset>
+                                      </form>
+                                      
+                                      <table width="100%" id="compras">
+                                           <tr>
+                                           		<td style="border:none">
+                                                	 <a href="/admin/sispag/relatorio_vendas/?pdf=1"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
+                                                </td>
+                                            	<td style="border:none">
+                                                	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
+                                                </td>
+                                        </tr>
+                                            
+                   </table>               
+       {% endif %}
+  </div>
+                            
+
+</div>
+{% endblock %}
+
+</p>

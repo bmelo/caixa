@@ -1,0 +1,30 @@
+{% extends "inmeq/base.html" %}
+{% block extrastyle %}{% endblock %}
+{% block extrahead %}{% endblock %}
+{% load adminmedia %}
+{% load thumbnail%}
+{% block corpo %}
+<div id="noticias" style="margin-top:120px !important">
+     <div id="data" >Bem-vindo. Maceió/AL, 20/08/2009&nbsp;</div>
+     <div id="slideNoticias" style="width:590px;">
+     <div class="noticia"><div style="padding-left:5px">Noticias</div></div>
+{% if noticias %}
+	<div class="noticiaTitulo">{{noticias.titulo}}</div>
+     <div class="data_pub">{{noticias.data_publicacao|date:"D d M Y"}} - {{noticias.data_publicacao|time:"H:i"}}</div>
+	<table width="100%">
+    	<tr>
+        	<td>
+                <div class="noticiaCorpo">{{noticias.corpo|linebreaks}}</div>
+            </td>
+            <td>
+                <div style="float:right"><p><img src="{% load adminmedia %}{% admin_media_prefix %}{{noticias.foto_principal|thumbnail:"200x150"}}" style="padding:5px 5px 5px 5px; border:1px solid #CCCCCC; margin: 0 5px 0 10px;"></p><p style="font-size:11px;color:#CCCCCC;text-align:center;">{{noticias.titulo_foto}}</p></div>
+             </td>
+         </tr>
+    </table>
+{% endif %}
+	</div>
+    </div>
+</div>
+
+{% endblock %}
+ 

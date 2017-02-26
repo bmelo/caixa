@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>INMEQ/AL - Instituto Metrologia e Qualidade de Alagoas</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="{% load adminmedia %}{% admin_media_prefix %}inmeq/css/estilo.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% admin_media_prefix %}inmeq/js/swfobject.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}inmeq/js/ss.js"></script>
+{% block extrastyle %}{% endblock %}
+{% block extrahead %}{% endblock %}
+</head>
+<body class="thrColFix" onLoad="ss.update();">
+<div id="container">
+  <div id="sidebar1">
+  <div id="menu">
+	  <div id="topo_menu"></div>
+		<ul>
+           <li><a href="/inmeq_site/inmeq/conheca/">INMEQ</a></li>
+           <li>GESTÃO</li>
+           <li>SERVICOS</li>
+           <li>CONSUMIDOR</li>
+       </ul>
+   </div>
+   <div id="baixo_menu"></div>
+  </div>
+  <div id="sidebar2">
+    <div id="parceiros">
+    	<div id="topo_parceiros"></div>
+        <img src="{% admin_media_prefix %}inmeq/img/inmetro.png"/>
+        <img src="{% admin_media_prefix %}inmeq/img/governo.png"/>  
+    </div>
+    <div id="baixo_parceiros"></div>
+   </div>
+  <div id="mainContent">
+  <div class="cabeca" id="cabeca" style="position:absolute; top:10px; z-index:10;">
+          		  <script type="text/javascript">
+					var so = new SWFObject("{% admin_media_prefix %}inmeq/flash/topo.swf", "topo", "571", "133", "8", "#ffffff");				
+					so.addParam("wmode", "transparent");
+					so.addParam("scale", "noscale");
+					so.addParam("salign", "TL");	
+					so.write("cabeca");
+				  </script>
+    </div>
+        <div id="canto-up"></div>
+  <div id="barra">        </div>
+  {% block corpo %}{% endblock %}
+  <div id="rodape">
+          <div id="endereco">Rua Gazeta de Alagoas, s/n – Canaã<br>Maceió/AL – CEP:57080-130 – Tel:(82)3218-9100 Fax:(82)3218-9135</div>
+    	<div id="canto-bottom"></div>
+    </div>
+    </div>
+	</div> 
+</body>
+</html>

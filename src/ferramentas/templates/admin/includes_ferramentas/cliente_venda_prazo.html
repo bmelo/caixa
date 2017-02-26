@@ -1,0 +1,327 @@
+{% extends "admin/base_site2.html" %}
+{% load i18n %}
+{% load navegacao %}
+{% load aviso %}
+{% load perfil %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedInlineFieldsets.js"></script>
+<script language="javascript1.2">
+function cloneMore(selector, type) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + type + '-TOTAL_FORMS').val();
+    newElement.find(':input').each(function() {
+        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+        var id = 'id_' + name;
+        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+    });
+    newElement.find('label').each(function() {
+        var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+        $(this).attr('for', newFor);
+    });
+    total++;
+    $('#id_' + type + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+}
+
+</script>
+<style>
+input[type="text"], textarea {
+width:40px !important;
+}
+#produtos td, #produtos th{text-align:center}
+#compras td, #compras th, #compras ul{text-align:center !important;}
+</style>
+{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/admin/">{% trans "Home" %}</a> &rsaquo; Cliente {{ pessoa.nome }}</div>{% endblock %}
+
+{%block esquerda%}
+{% if request.user.is_staff%}
+{% block perfilsidebar %}
+{% if request.user.is_authenticated %}
+{% get_perfil request.user %}
+{% endif %}
+{% endblock %}
+{% endif %}
+
+{% if app_list %}
+    {% for app in app_list %}
+    	{%ifequal app.name "Auth"%}
+        <div id="menu_app{{forloop.counter}}" class="menus"  >
+       		 <ul class="titulo_app">
+                    <li>
+                        <span> Autentica&ccedil;&atilde;o</span>
+                    </li>
+             </ul>
+         <div class="app">
+        <table>
+        <tbody>
+        	
+        {% for model in app.models %}
+            <tr>
+            {% if model.perms.change %}
+                <th scope="row" width="65%"><span class="titulo_nome">{{ model.name }}</span></th>
+            {% endif %}
+            <td>
+            {% if model.perms.add %}
+            	 <div class="espacamento" >
+               	 	<a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a>
+                </div >
+            {% endif %}
+            
+            {% if model.perms.change %}
+                <div class="espacamento" >
+               		 <a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a>
+                </div>
+            {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+        </div>
+        {% endifequal %}
+    {% endfor %}
+{% endif %}
+{%endblock%}
+{%block direita%}
+
+{% block sidebar %}
+{% if user.is_authenticated and user.is_superuser %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Recent Actions' %}</h2>
+        <h3>{% trans 'My Actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% trans 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">{% if not entry.is_deletion %}<a href="{{ entry.get_admin_url }}">{% endif %}{{ entry.object_repr }}{% if not entry.is_deletion %}</a>{% endif %}<br /><span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{%endblock%}
+{% block content %}
+<div id="content-main">
+
+	 {% if request.user.is_authenticated %}
+     	{% if vend %}
+                <br><br>
+                            <div >
+                                        <fieldset class="module aligned ">
+                                         <h2> CLIENTE N&ordm; {{ vend.cliente.id }}</h2>
+              
+              
+                                         <div class="form-row nome ">
+                                            <div>                                                                                        
+                                                NOME: {{ vend.cliente.nome|upper}}
+                                            </div>
+                                         </div>
+                                        
+                                    
+                                    	<div class="form-row endereco ">
+                                            <div>                                                                                        
+                                                END:{{ vend.cliente.logradouro|upper }} , {{ vend.cliente.bairro|upper }} {% if vend.cliente.cep %}CEP:({{ vend.cliente.cep }}){% endif %} - {{ vend.cliente.cidade }}/{{ vend.cliente.estado }}
+                                            </div>
+                                        </div>
+                                    {% if vend.cliente.telefone %}
+                                     <div class="form-row telefone ">
+                                            <div>                                                                                        
+                                               TELEFONE: {{ vend.cliente.telefone}}
+                                            </div>
+                                     </div>
+                                      {% endif %}                                       
+                                      {% if vend.cliente.celular %}
+                                        <div class="form-row celular ">
+                                            <div>                                                                                        
+                                                CELULAR: {{ vend.cliente.celular}}
+                                            </div>
+                                        </div>                                 
+                                       
+                                     {% endif %}
+                                    <div class="form-row data_nascimento ">
+                                            <div>                                                                                        
+                                                DATA DE NASCIMENTO: {{ vend.cliente.data_nascimento|date:"d/m/Y" }}
+                                            </div>
+                                     </div>
+                                   </fieldset>
+                                   <br><br>
+                                <div id="changelist" class="module filtered">
+                                       <table width="100%" border="1px" id="produtos">
+                                         <tr>
+                                           <th colspan="4" align="center">
+                                             <div style="text-align:center">ITENS DA COMPRA</div>
+                                            </th>
+                                         </tr>
+                                         <tr>
+                                            <th>
+                                                PRODUTO
+                                            </th>
+                                            <th>
+                                                QUANTIDADE
+                                            </th>
+                                            <th>
+                                                VALOR UNITARIO
+                                            </th>
+                                            <th>
+                                                VALOR TOTAL
+                                            </th>
+                                          
+                                           
+                                         </tr>
+                                         {% if lista %}
+                                         {% for vend in lista %}
+                                            <tr>
+                                                <td>
+                                                  
+                                                  {% if vend.produto %}
+                                                  
+                                                  	{{ vend.produto.tipo.nome}}
+                                                  {% else %}
+                                                  
+                                                 	 {% if vend.operadora %}
+                                                     		Recarga {{ vend.operadora.nome}}
+                                                     {% endif %}
+                                                  {% endif %}
+                                                </td>
+                                                <td>
+                                                  {{ vend.quantidade}}
+                                                </td>
+                                                <td>
+                                                
+                                                  R$ {% if vend.produto %}{{ vend.produto.valor}}{% else %}{% if vend.operadora%}{{ vend.valor}}{% endif %}{% endif %}                                                </td>
+                                                <td>
+                                                  R$ {% if vend.produto %}{{ vend.valor}}{% else %}{% if vend.operadora%}{{ vend.total}}{% endif %}{% endif %}
+                                                </td>
+                                               
+                                            </tr>
+                                         {% endfor %}
+                                          {% endif %}
+                                       </table>
+                                      </div>
+									<br><br>
+
+                                        {% if vend.finalizada %}
+                                        	
+                                                	<div align="center" style="padding:10px;background-color:#3399CC;width:200px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">														 
+                                                    <table width="100%" >
+                                                    <tr>
+                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                        	TOTAL
+                                                        </td>
+                                                        <td style="border:none;color:#FFFFFF !important">
+                                                        	R$ {{vend.total}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                        	VALOR PAGO
+                                                        </td>
+                                                        <td style="border:none;color:#FFFFFF !important">
+                                                        	R$ {{ vend.valor_pago}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                        	{% ifequal vend.pagamento '2' %}
+                                                            	{% if desconto %} DEVENDO {% else %} TROCO {% endif %}
+                                                            {% else %} 
+                                                        		{% if desconto %} DESCONTO {% else %} TROCO {% endif %}
+                                                            {% endifequal %}
+                                                        </td>
+                                                        <td style="border:none;color:#FFFFFF !important">
+                                                        	R$ {{vend.troco}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                        	CAIXA
+                                                        </td>
+                                                        <td style="border:none;color:#FFFFFF !important">
+                                                        	{{ vend.vendedor.nome|upper }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                        	PARCELAS RESTANTES
+                                                        </td>
+                                                        <td style="border:none;color:#FFFFFF !important">
+                                                        	{{ vend.parcelas }}
+                                                        </td>
+                                                    </tr>
+                                                    </table>
+                                                    
+                                                    
+                                                    </div>
+                                                     <br><br>
+                                                  {% if vend.aberto %}  
+                                       			<form method="POST">
+                                                     <fieldset class="module aligned ">
+                                               			 <h2>OP&Ccedil;&Otilde;ES DE PAGAMENTO</h2>
+                                                         <div class="form-row pagamento ">
+                                                            <div>
+                                                        		<label for="id_pagamento">Previs&atilde;o de Pagamento:</label>
+                                                                {{ v.previsao_pagamento }}{{ v.previsao_pagamento.errors }}
+                                                            </div>
+                                                         </div>
+                                                         
+                                                       <div class="form-row valor_pago ">
+                                                            <div>
+                                                           		<label for="id_valor_pago">Valor Pago: R$</label>
+                                                           		{{ v.valor_pago }}{{ v.valor_pago.errors }}
+                                                             </div>
+                                                        </div>
+                                                         <div class="form-row concluir ">
+                                                            <div style="float:right">
+                                              				 	<p><input type="submit" value="Concluir" /></p>
+                                                            </div>
+                                                         </div>
+                                                        </fieldset>
+                                                 </form>
+                                           
+                                            	 {% endif%}
+                                                                               
+										{% endif%}                                          
+                                          <table width="100%" id="compras">
+                                           <tr>
+                                           	
+                                     		<td style="border:none">
+									 <a href="/admin/sispag/cliente/?id={{vend.cliente.id}}"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Historico de vendas</div></a>
+                                     		</td>
+                                            	<td style="border:none">
+                                                	 <a href="/admin/sispag/cancelar_venda/{{vend.id}}/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Cancelar venda</div></a>
+                                                </td>
+                                                <td style="border:none">
+                                                	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Inicio</div></a>
+                                                </td>
+                                            </tr>
+                                            
+                                            </table>                                        
+                                            
+                                       <br>
+                                	
+                                </div>
+                          
+            {% else %}
+                <div style="padding:10px;font-size:24px;text-align:center"> {{ erro }}</div>
+            {% endif %}
+              
+       {% endif %}
+                              </div>
+                            
+
+</div>
+{% endblock %}
+
+</p>

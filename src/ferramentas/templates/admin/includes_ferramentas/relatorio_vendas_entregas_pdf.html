@@ -1,0 +1,120 @@
+<style>
+input[type="text"], textarea {
+width:40px !important;
+}
+#produtos td, #produtos th{text-align:center; padding:3px !important;}
+.tr1{
+background-color:#F8F8F8;
+}
+.tr2{
+background-color:#FFF;
+}
+</style>
+{% block content %}
+<center>
+<div id="content-main">
+
+	 {% if request.user.is_authenticated %}
+     	{% if erro %}
+                <div style="padding:10px;font-size:24px;text-align:center"> {{ erro }}</div>
+                <br><br>
+        {% else %}
+                
+                 <div align="center" >
+                                          <div style="padding-top:10px;font-size:24px;text-align:center">REL&Aacute;TORIO DE VENDAS E ENTREGAS {% if hoje %} {% now "j" %} DE {% now "F" %} DE {% now "Y" %} 
+{% else%}{% if mes %} {% now "F"%} DE {% now "Y"%}  {% else %}{% if data_inicio and data_fim %} - {{ data_inicio|date:"d/m/Y" }} - {{ data_fim|date:"d/m/Y"}}{% endif %}{% endif %}{% endif %} </div> <br> <br>
+                                               
+    <div class="app" style="padding-left:20px">
+    							{% if caixas %}
+                                     <div id="changelist" class="module filtered">
+                                    <table width="100%" id="produtos" align="center">
+                                    <tbody>
+                                    <tr>
+                                    	<th style="width:40%">
+                                        	Caixa
+                                      </th>
+                                       
+                                        <th style="width:20%">
+                                        	Total de Vendas
+                                      </th>
+                                        
+                                    </tr>
+                                    {% regroup caixas by vendedor as caixas_list %}
+                                    	{% for caixa in caixas_list %}
+                                            <tr class="{% cycle 'row2' 'row1' %}">
+                                              <td>
+                                                    {{ caixa.grouper}}
+                                              </td>
+                                                
+                                                <td>
+                                                    {% for c in caixa.list%}
+                                                    	{% if forloop.last %} {{ forloop.counter }}{%endif%}
+                                                    {% endfor %}
+                                                </td>
+                                                
+                                            </tr>
+                                         {% endfor %}
+                                            
+                                     
+                                    </tbody>
+                                </table>
+                                </div>
+                                {% endif %}
+                                <br><br>
+                                {% if entregadores %}
+                                     <div id="changelist" class="module filtered">
+                                    <table width="100%" id="produtos" align="center">
+                                    <tbody>
+                                    <tr>
+                                    	<th style="width:40%">
+                                        	Entregador
+                                      </th>
+                                       
+                                        <th style="width:20%">
+                                        	Total de Entregas
+                                      </th>
+                                        
+                                    </tr>
+                                    {% regroup entregadores by entregador as entregador_list %}
+                                    	{% for entregador in entregador_list %}
+                                            <tr class="{% cycle 'row2' 'row1' %}">
+                                              <td>
+                                                    {{ entregador.grouper}}
+                                              </td>
+                                                
+                                                <td>
+                                                     {% for e in entregador.list%}
+                                                    	{% if forloop.last %} {{ forloop.counter }}{%endif%}
+                                                    {% endfor %}
+                                                </td>
+                                                
+                                            </tr>
+                                         {% endfor %}
+                                            
+                                     
+                                    </tbody>
+                                </table>
+                                {% endif %}
+						<BR>
+						<BR>
+					
+                                </div>	
+                                       
+
+										<br><br>
+                                      
+                   </div>
+                          
+            
+                                       
+            {% endif %}					
+            						         
+       {% endif %}
+  </div>
+                            
+
+</div>
+</center>
+{% endblock %}
+
+</p>

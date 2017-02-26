@@ -1,0 +1,197 @@
+
+{% block content %}
+<div id="content-main">
+
+	 {% if request.user.is_authenticated %}
+     	{% if pessoa %}
+                
+                            <div  >
+                                              <br><br> 
+                                     <div class="app" style="padding-left:20px">
+                                      <fieldset class="module aligned ">
+                                         <h2> CLIENTE N&ordm; {{ pessoa.id }}</h2>
+              
+              
+                                         <div class="form-row nome ">
+                                            <div>                                                                                        
+                                                NOME: {{ pessoa.nome|upper}}
+                                            </div>
+                                         </div>
+                                        
+                                    
+                                    	<div class="form-row endereco ">
+                                            <div>                                                                                        
+                                                END:{{ pessoa.logradouro|upper }} , {{ pessoa.bairro|upper }} {% if pessoa.cep %}CEP:({{ pessoa.cep }}){% endif %} - {{ pessoa.cidade }}/{{ pessoa.estado }}
+                                            </div>
+                                        </div>
+                                    {% if pessoa.telefone %}
+                                     <div class="form-row telefone ">
+                                            <div>                                                                                        
+                                               TELEFONE: {{ pessoa.telefone}}
+                                            </div>
+                                     </div>
+                                      {% endif %}                                       
+                                      {% if pessoa.celular %}
+                                        <div class="form-row celular ">
+                                            <div>                                                                                        
+                                                CELULAR: {{ pessoa.celular}}
+                                            </div>
+                                        </div>                                 
+                                       
+                                     {% endif %}
+                                    <div class="form-row data_nascimento ">
+                                            <div>                                                                                        
+                                                DATA DE NASCIMENTO: {{ pessoa.data_nascimento|date:"d/m/Y" }}
+                                            </div>
+                                     </div>
+                                   </fieldset>
+                                   <br><br>
+                                </div>
+                                	<div id="changelist" class="module filtered">
+                                       <table width="100%" border="1px" id="produtos">
+                                         <tr>
+                                           <th colspan="8" align="center">
+                                             <div style="text-align:center">HISTORICO DE COMPRAS</div>
+                                            </th>
+                                         </tr>
+                                         <tr>
+                                            <th style="width:20% !important">
+                                                PRODUTOS
+                                            </th>
+                                            
+                                            <th style="width:10% !important">
+                                                QUANT.
+                                            </th>
+                                            
+                                            <th>
+                                                DATA DE COMPRA
+                                            </th>
+                                            <th>
+                                                PREV. DE PAGAMENTO
+                                            </th>
+                                            <th>
+                                                DATA DE PAGAMENTO
+                                            </th>
+                                            <th>
+                                                FORM. DE PAGAMENTO
+                                            </th>
+                                            
+                                            
+                                             <th>
+                                               SALDO DEVEDOR
+                                            </th>
+                                            <th>
+                                                TOTAL
+                                            </th>
+                                            
+                                         </tr>
+                                         <tr>
+                                         {% if lista %}
+                                         {% for vend in lista %}
+                                            <tr {% if vend.venda.aberto %} style="background-color:#F3DFDA;" {% else %} style="background-color:#F0FFE1;" {% endif %}>
+                                                <td >
+                                                  
+                                                  {% if vend.produto %}
+                                                  
+                                                  	{% if vend.venda.aberto %}<a href="/admin/sispag/venda_prazo/{{vend.venda.id}}/">{{ vend.produto.tipo.nome}}</a>{% else %} {{ vend.produto.tipo.nome}} {% endif%}
+                                                  {% else %}
+                                                  
+                                                 	 {% if vend.operadora %}
+                                                     		{% if vend.venda.aberto %} <a href="/admin/sispag/venda_prazo/{{vend.venda.id}}/">Recarga {{ vend.operadora.nome}}</a>{% else %} Recarga {{ vend.operadora.nome}} {% endif %}
+                                                     {% endif %}
+                                                  {% endif %}
+                                                  	
+                                                </td>
+ 												<td>
+                                                  {{  vend.quantidade}}
+                                                </td>
+												
+                                                <td>
+                                                  {{ vend.venda.data_venda|date:"d/m/Y"}}
+                                                </td>
+                                                <td>
+                                                  {{ vend.venda.previsao_pagamento|date:"d/m/Y"}}
+                                                </td>
+                                                <td>
+                                                  {{ vend.venda.data_pagamento|date:"d/m/Y"}}
+                                                </td>
+                                                <td>
+                                                  {% ifequal vend.venda.pagamento '1' %} 
+                                                  	&Agrave; vista
+                                                  {% else %}
+                                                  		{% ifequal vend.venda.pagamento '2' %}
+                                                        	&Agrave; prazo 
+                                                        {% else %}
+                                                        	&Agrave; Cart&atilde;o
+                                                        {% endifequal %}	
+                                                  {% endifequal %}
+                                                </td>
+                                                <td>
+                                                  {% if vend.venda.aberto %}
+                                                  	{{ vend.venda.troco }} 
+                                                  {% else %}
+                                                  	0
+                                                  {% endif %}
+                                                </td>
+                                                <td>
+                                                  {% if vend.operadora %}{{  vend.total}} {% else %} {{ vend.valor }} {% endif %}
+                                                </td>
+                                                 
+                                            </tr>
+                                         {% endfor %}
+                                         {% if total %}
+                                         <tr>
+                                         	<td style="border:none !important" colspan="5">
+                                            </td>
+                                            
+                                         	
+                                            <td>
+                                            	TOTAL GERAL
+                                            </td>
+                                            
+                                         	<td>
+                                            	{% if troco %}{{ troco }} {% else %} 0 {% endif %}
+                                            </td>
+                                            <td>
+                                            	{{ total }}
+                                            </td>
+                                         </tr>
+                                        {% endif %} 
+                                        {% endif %}
+                                       </table>
+									</div>
+										<br><br>
+                                       <table width="100%" id="compras">
+                                           <tr>
+                                           	
+                                     		<td style="border:none">
+									 <a href="/admin/sispag/iniciar_venda/{{pessoa.id}}/"><div style="padding:10px;background-color:#3399CC;width:140px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">Iniciar venda</div></a>
+                                     		</td>
+                                            	<td style="border:none">
+                                                	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
+                                                </td>
+                                            </tr>
+                                            
+                                            </table> 
+                                      
+
+
+
+
+
+                                       <br>
+                                	
+                                </div>
+                          
+            {% else %}
+                <div style="padding:10px;font-size:24px;text-align:center"> {{ erro }}</div>
+            {% endif %}
+              
+       {% endif %}
+                              </div>
+                            
+
+</div>
+{% endblock %}
+
+</p>

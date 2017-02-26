@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<ul>
+    <li>Beta</li>
+    <li id="toggle_favoritos"><a href="javascript://">{% trans "Favoritos" %}</a>
+        <ul id="favoritos" class="menu">
+            {% if object_list %}
+            {% for object in object_list %}
+            <li><a href="{{ object.link }}"><strong>{{ object }}</strong></a></li>
+            {% endfor %}
+            {% else %}
+            <li class="no-entries">N&atilde;o h&aacute; itens.</li>
+            {% endif %}
+        </ul>
+    </li>
+    
+    {% if is_allowed %}
+    {% if is_favoritos %}
+    <li class="action favoritos">
+        <a href="/sistema/ferramentas/favoritos/remove/?path={{ path }}" class="favoritos-remove"> </a>    </li>
+    {% else %}
+    <li class="action favoritos">
+        <a href="/sistema/ferramentas/favoritos/add/?path={{ path }}&titulo={{ titulo }}" class="favoritos-add"> </a>    </li>
+    {% endif %}
+    {% endif %}
+    <li class="action favoritos manage">
+        <a href="/sistema/admin/ferramentas/favoritos/{{ favoritos.id }}" class="favoritos-manage"> </a>    </li>
+    <li> </li>
+</ul>

@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia %}
+{% load i18n %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="../../../../jsi18n/"></script>
+{% endblock %}
+{% block stylesheet %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css_ferramentas/ferramentas_ajuda.css" />{% endblock %}
+{% block coltype %}colSM{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/sistema/admin/">{% trans "Home" %}</a> &rsaquo; Meses Atrasados</div>{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+<div class="boletim" style="background-color:#FFFFFF">
+{% if meses_atrazados %}
+<table>
+                
+                {% for mes in meses_atrazados %}
+                    <tr> 
+                        <td scope="row" style="border-bottom:none; color:#FF0000 !important" >{{mes}}</td>
+                    </tr>
+                {%endfor%}
+  </table>
+{% else %}
+<p>Voc&ecirc; esta quites com as mensalidades!</p>
+{% endif%}
+</div>
+</div>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,379 @@
+{% extends "admin/base_site2.html" %}
+{% load i18n %}
+{% load navegacao %}
+{% load aviso %}
+{% load perfil %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedInlineFieldsets.js"></script>
+
+<style>
+#form-cliente-id input[type="text"], textarea {
+width:40px !important;
+}
+
+#form-cliente-nome input[type="text"], textarea {
+width:150px !important;
+}
+
+#form-cliente-endereco input[type="text"], textarea {
+width:150px !important;
+}
+
+#form-cliente-telefone input[type="text"], textarea {
+width:80px !important;
+}
+</style>
+{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs">{% trans "Home" %}</div>{% endblock %}
+
+{%block esquerda%}
+{% if request.user.is_staff%}
+{% block perfilsidebar %}
+{% if request.user.is_authenticated %}
+{% get_perfil request.user %}
+{% endif %}
+{% endblock %}
+{% endif %}
+
+{% if app_list %}
+    {% for app in app_list %}
+    	{%ifequal app.name "Auth"%}
+        <div id="menu_app{{forloop.counter}}" class="menus"  >
+       		 <ul class="titulo_app">
+                    <li>
+                        <span> Autentica&ccedil;&atilde;o</span>
+                    </li>
+             </ul>
+         <div class="app">
+        <table>
+        <tbody>
+        	
+        {% for model in app.models %}
+            <tr>
+            {% if model.perms.change %}
+                <th scope="row" width="65%"><span class="titulo_nome">{{ model.name }}</span></th>
+            {% endif %}
+            <td>
+            {% if model.perms.add %}
+            	 <div class="espacamento" >
+               	 	<a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a>
+                </div >
+            {% endif %}
+            
+            {% if model.perms.change %}
+                <div class="espacamento" >
+               		 <a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a>
+                </div>
+            {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+        </div>
+        {% endifequal %}
+    {% endfor %}
+
+{% endif %}
+
+
+
+{%endblock%}
+{%block direita%}
+
+{% block sidebar %}
+{% if user.is_authenticated and user.is_superuser %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Recent Actions' %}</h2>
+        <h3>{% trans 'My Actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% trans 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">{% if not entry.is_deletion %}<a href="{{ entry.get_admin_url }}">{% endif %}{{ entry.object_repr }}{% if not entry.is_deletion %}</a>{% endif %}<br /><span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{%endblock%}
+{% block content %}
+<div id="content-main">
+{% if request.user.is_authenticated %}
+{% if app_list %}
+	{% for grupo in request.user.groups.all %}
+                    {% ifequal grupo.name "Administrador" %}
+    					{% for app in app_list %}
+    						{%ifequal app.name "Sispag"%}
+                                <div  >
+                                     
+                                 <div style="padding:10px;font-size:24px;text-align:center"> Administrador</div>
+                                           
+                                 <div class="app" style="padding-left:40px">
+                                <table width="100%">
+                                <tbody>
+                                <tr>
+                                    <td width="65%" style="border:none">
+                                        <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Relat&oacute;rio de Entrada</div>
+                                    </td>
+                                    <td style="border:none">
+                                               
+                                    
+                                        
+                                             <a href="/admin/sispag/relatorio_entradas/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                       
+                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="65%" style="border:none">
+                                        <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Relat&oacute;rio de Vendas</div>
+                                    </td>
+                                    <td style="border:none">
+                                               
+                                    
+                                        
+                                             <a href="/admin/sispag/relatorio_vendas/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                       
+                                    
+                                    </td>
+                                </tr>	
+                                
+                                <tr>
+                                    <td width="65%" style="border:none">
+                                        <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Relat. Cliente em atraso</div>
+                                    </td>
+                                    <td style="border:none">
+                                               
+                                    
+                                        
+                                             <a href="/admin/sispag/relatorio_cliente_atraso/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                       
+                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="65%" style="border:none">
+                                        <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Aniversariantes</div>
+                                    </td>
+                                    <td style="border:none">
+                                               
+                                    
+                                        
+                                             <a href="/admin/sispag/relatorio_aniversariantes/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                       
+                                    
+                                    </td>
+                                </tr>
+                                {% for model in app.models %}
+                                    <tr >
+                                    
+                                        <td  width="65%" style="border:none" ><div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">{{ model.name }}</div></td>
+                                    
+                                    <td style="border:none">
+                                               
+                                    
+                                        
+                                             <a href="{{ model.admin_url }}" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                       
+                                    
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                </table>
+                                </div>
+                                </div>
+        				{% endifequal %}
+    				{% endfor %}
+                    {% else %}
+                    	{% ifequal grupo.name "Caixa" %}
+                        	<div  >
+                                         
+                                     <div style="padding:10px;font-size:24px;text-align:center"> Caixa</div>
+                                               
+                                     <div class="app" style="padding-left:40px">
+                                    <table width="100%">
+                                    <tbody>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                            <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">G&aacute;s / &Aacute;gua / Recarga</div>
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <form  action="/admin/sispag/cliente/" id="form-cliente-id">
+                                                    <div><!-- DIV needed for valid HTML -->
+                                                    <label for="searchbar"><img alt="Search" src="{% admin_media_prefix %}img/admin/icon_searchbox.png"/></label>
+                                                    <input type="text" class="search-fields-verbose" id="searchbar" value="" name="id" size="10"/>
+                                                    <input type="submit" value="Buscar cliente por numero"/>
+                                                    </div>
+                                                 </form>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <form  action="/admin/sispag/cliente_nome/" id="form-cliente-nome">
+                                                    <div><!-- DIV needed for valid HTML -->
+                                                    <label for="searchbar"><img alt="Search" src="{% admin_media_prefix %}img/admin/icon_searchbox.png"/></label>
+                                                    <input type="text" class="search-fields-verbose" id="searchbar" value="" name="nome" size="50"/>
+                                                    <input type="submit" value="Buscar cliente por nome"/>
+                                                    </div>
+                                                 </form>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <form  action="/admin/sispag/cliente_endereco/" id="form-cliente-endereco">
+                                                    <div><!-- DIV needed for valid HTML -->
+                                                    <label for="searchbar"><img alt="Search" src="{% admin_media_prefix %}img/admin/icon_searchbox.png"/></label>
+                                                    <input type="text" class="search-fields-verbose" id="searchbar" value="" name="endereco" size="50"/>
+                                                    <input type="submit" value="Buscar cliente por endereco"/>
+                                                    </div>
+                                                 </form>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <form  action="/admin/sispag/cliente_telefone/" id="form-cliente-telefone">
+                                                    <div><!-- DIV needed for valid HTML -->
+                                                    <label for="searchbar"><img alt="Search" src="{% admin_media_prefix %}img/admin/icon_searchbox.png"/></label>
+                                                    <input type="text" class="search-fields-verbose" id="searchbar" value="" name="telefone" size="15"/>
+                                                    <input type="submit" value="Buscar cliente por telefone"/>
+                                                    </div>
+                                                 </form>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                            <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Outros</div>
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <a href="/admin/sispag/iniciar_venda/0/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                            <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Entrada de Mercadoria</div>
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <a href="/admin/sispag/entradaestoque/add/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                            <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Retirada de Dinheiro</div>
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <a href="/admin/sispag/retirada_caixa/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                            <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Abrir caixa</div>
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <a href="/admin/sispag/abrir_caixa/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                            <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Fechar caixa</div>
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <a href="/admin/sispag/fechar_caixa/" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                           
+                                        
+                                        </td>
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td width="65%" style="border:none">
+                                            <div style="padding:10px;background-color:#fff;width:300px;font-size:24px;">Cadastrar cliente</div>
+                                        </td>
+                                        <td style="border:none">
+                                                   
+                                        
+                                            
+                                                 <a href="/admin/sispag/cadastro_cliente" ><div style="padding:10px;background-color:#3399CC;width:30px;color:#FFFFFF;font:'Times New Roman', Times, serif 12px;text-align:center">OK</div></a>
+                                           
+                                        
+                                        </td>
+                                    </tr>	
+                                </tbody>
+                                </table>
+                                </div>
+                        {% endifequal %}
+                    {% endifequal %}
+                    {% endfor %}
+                   
+                  
+{% else %}
+    <p>{% trans "You don't have permission to edit anything." %}</p>
+{% endif %}
+                              </div>
+                            </div>
+{% endif %}
+</div>
+{% endblock %}
+
+</p>

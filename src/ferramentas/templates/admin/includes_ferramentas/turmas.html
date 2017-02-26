@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+{% load mediaroot %}
+{% load adminmedia %}
+{% load i18n %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="../../../../jsi18n/"></script>
+<script src="{% load adminmedia %}{% admin_media_prefix %}js/AC_RunActiveContent.js" language="javascript"></script>
+{% endblock %}
+{% block stylesheet %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css_ferramentas/ferramentas_ajuda.css" />{% endblock %}
+{% block coltype %}colSM{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/sistema/admin/">{% trans "Home" %}</a> &rsaquo; {% trans "Grafico de Estat&iacute;stico de Aproveitamento dos Alunos" %}</div>{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div class="boletim_titulo">Escolha a Disciplina:</div>
+  {% regroup boletins by serie_grau as boletimlist %}
+    {% for boletim in boletimlist %}
+    			<table width="100%" >
+                  <tr><td>{{ boletim.grouper }}</td>
+                  </tr>
+                </table>
+                {% for b in boletim.list %}
+                    <table width="100%" >
+                    {% ifchanged b.disciplina %}
+					<tr>
+                      	<td style=" border:none !important ;color:#999999 !important;padding-left:50px !important"><a href="/sistema/ferramentas/grafico/turmas/?disciplina={{ b.disciplina_professor.disciplina.id}}">{{ b.disciplina}}{{ forloop.parentloop.first.disciplina}}</a></td>
+                      </tr>
+                    {%else%}
+                 
+                    {% endifchanged %}
+                    </table>
+                {% endfor %}
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+
+

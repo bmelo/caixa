@@ -1,0 +1,83 @@
+{% extends "inmeq/base.html" %}
+{% block extrastyle %}{% endblock %}
+{% block extrahead %}{% endblock %}
+{% load adminmedia %}
+{% load thumbnail%}
+{% load enquete %}
+{% block corpo %}
+<div id="noticias">
+     <div id="data">Bem-vindo. Maceió/AL, 20/08/2009&nbsp;</div>
+     <div id="slideNoticias">
+              <table>
+                <tr><td><div class="tituloDiv"> Notícias</div></td></tr>
+                <tr>
+                  <td>
+                    <div class="boxSlideFotos">
+                      <a href="javascript:void(0);" onClick="javascript:ss.hotlink();return false;">
+                        <img name="SLIDESIMG" src="">
+                      </a>
+                    </div>
+                    <div class="boxSlideControle">
+                      <a href="javascript:void(0);" onClick="ss.pause();ss.goto_slide(0);ss.update();">1</a>
+                      <a href="javascript:void(0);" onClick="ss.pause();ss.goto_slide(1);ss.update();">2</a>
+                      <a href="javascript:void(0);" onClick="ss.pause();ss.goto_slide(2);ss.update();">3</a>
+                      <a href="javascript:void(0);" onClick="ss.pause();ss.goto_slide(3);ss.update();">4</a>
+                    </div>
+                  </td>
+                  <td valign="top" style="padding-left:10px">
+                    <div class="boxSlideChamada">
+                      <a href="javascript:void(0);" onClick="javascript:ss.hotlink();return false;">
+                        <div id="titulosDasNoticias"></div>
+                      </a>
+                      <div id="resumosDasNoticias"></div>
+                    </div>
+                  </td>
+                </tr>
+        </table>
+
+<script type="text/javascript">
+                //ADICIONANDO AS NOTÍCIAS NO SLIDE
+                ss = new slideshow("ss");
+                ss.timeout = 4000;
+                ss.prefetch = 1;
+				{% if noticias_list %}
+					{% for noticia in noticias_list %}
+						ss.add_slide(new slide("{% load adminmedia %}{% admin_media_prefix %}{{noticia.foto_principal|thumbnail:"200x150"}}", "/inmeq_site/inmeq/noticias/?id={{noticia.id}}", "{{noticia.titulo}}","{{noticia.corpo|truncatewords:30|linebreaks}}"));
+					{% endfor%}
+				{% endif %}
+                //Configurando o SlideShow
+                if(document.images) {
+                  ss.image = document.images.SLIDESIMG;
+                  ss.textid = "titulosDasNoticias";
+                  ss.resumoid = "resumosDasNoticias";
+                  ss.update();
+                  ss.play();
+                }
+              </script>
+      </div>
+            <!-- FIM DAS NOTÍCIAS -->
+    </div>
+
+    {% get_enquete request %}
+<div id="informativos">
+<p>Informativo</p>
+<h2>Verificação de Taxímetro 2009</h2>
+<h3>Consulte o calendério de verificação e tire as principais dúvidas sobre a aferição 2008.</h3>
+</div>
+<div id="inmeq" >
+	<div class="tituloDiv" style="padding:15px 0 0 0;color:#993300">INMEQ-AL</div>
+    <p>O INMEQ-AL executa serviços essenciais na proteção ao cidadão em suas relações de consumo exercendo, no âmbito do Estado, a verificação e a fiscalização de:</p>
+  <ul>
+    <li>Instrumento de medição (e medidas materializadas);</li>
+	   <li> Produtos pré-medidos;</li>
+	   <li> Produtos têxteis;</li>
+	   <li> Produtos com certificação compulsória;</li>
+	   <li> Veículos transportadores de produtos perigosos;</li>
+    <li>Posto fixo para verificação de taxímetro, na capital.</li>
+   </ul>
+   <center><img src="{% load adminmedia %}{% admin_media_prefix %}inmeq/img/consumidor.png" style="padding-bottom:5px"/></center>
+</div>
+  </div>
+
+{% endblock %}
+ 

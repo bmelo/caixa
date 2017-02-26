@@ -1,0 +1,52 @@
+{% load thumbnail%}
+{% load i18n %}
+<div id="content-related-aviso">
+    <div class="arquivo"  style="margin-top:15px;">
+        <ul class="titulo_arquivos">
+        	<li><span style="color:#0099CC">Mensagens</span></li>
+        </ul>
+        <div class="items" >
+        {% if mensagem_list.object_list %}
+        <table width="100%">
+        	{% for mensagem in mensagem_list.object_list %}
+            <tr style="border-bottom:dotted 2px #EEE !important" >
+                	<td width="130px">
+                    	{% if mensagem.pegar.foto %}
+                    		<a href="/sistema/usuario/{{mensagem.user.username}}/"><img src='{% load adminmedia %}{% admin_media_prefix %}{{mensagem.pegar.foto|thumbnail}}' style="padding: 0 0 0 10px;"/></a>
+                        {% else %}
+                        	<a href="/sistema/usuario/{{mensagem.user.username}}/"><img src='{% load adminmedia %}{% admin_media_prefix %}img/admin/padrao.png' style="padding: 0 0 0 10px;"/></a>
+                        {% endif %}
+                    </td>
+                	<td>
+                   <p class="titulo_nome"> <a href="/sistema/usuario/{{mensagem.user.username}}/">{{ mensagem.pegar.nome}}</a> - <span style="color:#993300">{{mensagem.data_mensagem|date:"D d M Y"}} {{mensagem.data_mensagem|time:"H:i"}}</span></p>
+                       <ul class="menulist">
+                        <li>{% if mensagem.mensagem %}
+                        		<p>{{ mensagem.mensagem }}</p>
+                        	{% endif %}
+                        </li>
+                        </ul>
+                      </td>
+                 </tr>
+            {% endfor %}
+         </table>
+             <div class="pagination"  style="text-align:center;margin-bottom:10px">
+                    <span class="step-links">
+                        {% if mensagem_list.has_previous %}
+                            <a href="?pm={{ mensagem_list.previous_page_number }}">anterior<<</a>
+                        {% endif %}
+                
+                        <span class="current" >
+                            P&aacute;gina {{ mensagem_list.number }} de {{ mensagem_list.paginator.num_pages }} 
+                        </span>
+                
+                        {% if mensagem_list.has_next %}
+                            <a href="?pm={{ mensagem_list.next_page_number }}">>>pr&oacute;xima</a>
+                        {% endif %}                   
+                   </span>
+               </div>
+        {% else %}
+               	<h3>N&atilde;o h&aacute; mensagens.</h3>
+        {%endif%}
+        </div>
+    </div>
+</div>

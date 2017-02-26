@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load thumbnail%}
+<div id="content-related-turma">
+	<div id="menu_turma" class="turma" style="width:100%;">
+    <div >
+      {% if turma_list.object_list %}
+      		<ul class="titulo_direita">
+        	<li><span>Turma</span></li>
+        	</ul>
+            <div >
+        	<table >
+        	{% for aluno in turma_list.object_list %} 
+            	<tr >
+  					{% if aluno.aluno.foto %}
+                        <td class="foto">
+                            <a href="/sistema/usuario/{{aluno.aluno.user.username}}/"><img src='{% load adminmedia %}{% admin_media_prefix %}{{aluno.aluno.foto|thumbnail:"50x50"}}'/></a>
+                        </td>
+                    {% else %}
+                        <td class="foto">
+                            <a href="/sistema/usuario/{{aluno.aluno.user.username}}/"><img src='{% load adminmedia %}{% admin_media_prefix %}img/admin/padrao_50x50.png'/></a>
+                        </td>
+                    {% endif %}
+                    <th width="100%">
+                    	<a href="/sistema/usuario/{{aluno.aluno.user.username}}/"><p class="titulo_nome">{{ aluno.aluno.nome|title }}</p></a>
+                        <p><a href="mailto:{{aluno.ano_letivo.aluno.email}}">{{aluno.aluno.email}}</a></p>
+                    </th>
+                </tr>
+            {% endfor %}
+            </table>
+            <div class="pagination"  style="text-align:center;">
+                    <span class="step-links">
+                        {% if turma_list.has_previous %}
+                            <a href="?pt={{ turma_list.previous_page_number }}">anterior<<</a>
+                        {% endif %}
+                
+                        <span class="current">
+                            P&aacute;gina {{ turma_list.number }} de {{ turma_list.paginator.num_pages }} 
+                        </span>
+                
+                        {% if aviso_list.has_next %}
+                            <a href="?pt={{ turma_list.next_page_number }}">>>pr&oacute;xima</a>
+                        {% endif %}                   
+                   </span>
+               </div>
+        {% else%}
+        	<ul class="titulo_direita">
+        	<li><span >Turma</span></li>
+        	</ul>
+        	 <p style="text-align:center">Aluno n&atilde;o matriculado</p>
+        {%endif%}
+        </div>
+        </div>
+  </div>
+</div>

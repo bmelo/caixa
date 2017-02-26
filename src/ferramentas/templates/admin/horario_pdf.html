@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}><head>
+<title>{% block title %}{% endblock %}</title>
+</head>
+{% block content %}
+
+<div id="content-main">
+<div class="cabecalho">
+{% if colegio %}
+	{%for colegio in colegio %}
+		{% if forloop.last %}
+        	<table>
+            	<tr>
+                	<td width="100px"><img src='{% load mediaroot %}{% media_root %}{{colegio.logo}}'/></td>
+                   <td ><span class="nome_colegio">{{ colegio.nome|upper }}</span><br/>
+                    <span class="endereco_colegio">{{ colegio.endereco.logradouro|title }} , {{ colegio.endereco.bairro|title}}   <br/>
+                    {{ colegio.endereco.cidade }} - {{ colegio.endereco.estado }} Cep:{{colegio.endereco.cep}}<br/> 
+                    CNPJ: {{ colegio.cnpj }} Tel:{{colegio.endereco.pessoa.telefone}}</span>
+                    
+                    </td>
+                </tr>
+             </table>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</div>
+
+<div class="boletim_titulo">Grade Curricular</div>
+<div class="boletim_dados">
+{% if turmas%}
+{%for turma in turmas%}
+	{% if forloop.last %}
+    	Nome: {{ turma.ano_letivo.aluno.nome|upper }}<br/>
+		Turma: {{ turma.turma.codigo}}  {{ turma.turma.serie }} s&eacute;rie do {{ turma.turma.grau }} grau<br/>
+        Turno: {{ turma.turma.periodo.turno }}<br/>
+        Ano Letivo: {{ turma.turma.periodo.ano }}<br/>
+	{%endif%}
+{% endfor %}
+{% else %}
+<h2>Aluno n&atilde;o est&aacute; matriculado.</h2>
+{% endif %}
+</div>
+{% if horarios %}
+{% regroup horarios by horario as horariolist %}
+	 <div class="module">
+           <table border="1"> 
+                <tr class="titulos">
+                    <th>Horario</th>
+                    <th>Segunda-feira</th>
+                    <th>Ter&ccedil;a-feira</th>
+                    <th>Quarta-feira</th>
+                    <th>Quinta-feira</th>
+                    <th>Sexta-feira</th>
+                </tr>
+                {% for horario in horariolist %}
+                    <tr> 
+                         <td class="notas" >{{ horario.grouper }}</td>
+                         	
+                            	{% for h in horario.list|dictsort:"dia" %}
+                                        <td class="notas">
+                                         {{ h.disciplina.nome }}
+                                        </td>
+                                {% endfor %}
+                             
+                     </tr>
+                 {% endfor %}
+            </table>
+      </div> 
+{% else %}
+<h2>Aluno n&atilde;o est&aacute; matriculado.</h2>
+{%endif%}
+</div>
+{% endblock %}
+
+
+

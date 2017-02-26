@@ -1,0 +1,88 @@
+
+
+
+/* Global Definitions (Typography, Tables)
+----------------------------------------------------------------------- */
+
+.help .module {
+	width: 730px;
+	border: 1px solid #ccc !important;
+}
+
+.help h2 {
+	background: #383531 url(../img_ferramentas/bg_header.gif) repeat-x scroll 0 0 !important;
+	color: #ddd !important;
+}
+
+.help h3 {
+	color: #383531; margin: 20px 0 10px 0 !important; line-height: 100%;
+	font-size: 14px !important;
+}
+
+.help p {
+	font-size: 12px;
+	line-height: 18px;
+	color: #777;
+	margin: 10px 0 !important;
+}
+
+.help ul {
+	margin: 10px 13px !important;
+}
+
+.help ul li {
+	color: #777;
+	font-size: 12px;
+	line-height: 12px !important;
+	list-style-type: circle;
+	list-style-position: outside;
+	margin: 3px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

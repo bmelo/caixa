@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load thumbnail%}
+<div id="content-related-download">
+    <div class="arquivo" style="margin-top:15px;">
+    	<ul class="titulo_arquivos">
+        	<li><span style="color:#00C7FF">Arquivos</span></li>
+        </ul>
+         
+         <div class="items" > 
+      		{% if downloads_list.object_list  %}
+            <table width="100%" >
+                {% for download in downloads_list.object_list %} 
+                <tr style="border-bottom:dotted 2px #EEE !important" >
+                	<td>
+                    	{% if download.disciplina_turma.professor.foto %}
+                    		<img src='{{download.disciplina_turma.professor.foto|thumbnail}}' style="padding: 0 0 0 10px;"/>
+                        {% else %}
+                        	<img src='{% load adminmedia %}{% admin_media_prefix %}img/admin/padrao.png' style="padding: 0 0 0 10px;"/>
+                        {% endif %}
+                    </td>
+                	<td>
+                    <p class="titulo_nome">{{ download.disciplina_turma.professor.nome }} - <span class="disciplina">{{ download.disciplina_turma.disciplina.disciplina.nome }}</span></p>
+                       <ul class="menulist">
+                        <li>{% if download.comentario %}
+                        		<p>{{ download.comentario }}</p>
+                        	{% endif %}
+                            <p><a href='{{download.arquivo.url }}' class='interno'>{{download.titulo}}</a></p>
+                        </li>
+                        </ul>
+                      </td>
+                 </tr>
+                {% endfor %}
+            </table>
+               <div class="pagination"  style="text-align:center;margin-bottom:15px;">
+                    <span class="step-links">
+                        {% if downloads_list.has_previous %}
+                            <a href="?page={{ downloads_list.previous_page_number }}">anterior<<</a>
+                        {% endif %}
+                
+                        <span class="current">
+                            P&aacute;gina {{ downloads_list.number }} de {{ downloads_list.paginator.num_pages }} 
+                        </span>
+                
+                        {% if downloads_list.has_next %}
+                            <a href="?page={{ downloads_list.next_page_number }}">>>pr&oacute;xima</a>
+                        {% endif %}                   
+                   </span>
+               </div>
+      		{% else %}
+                    <h3>N&atilde;o h&aacute; downloads.</h3>
+            {%endif%}
+          </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load thumbnail%}
+<div id="content-related-turma">
+    <div id="menu_professores" class="professores" >
+    <div >
+      {% if professores_list.object_list %}
+      		<ul class="titulo_direita">
+        	<li><span>Professores</span></li>
+        	</ul>
+            <div >
+        	<table >
+        	{% for professor in professores_list.object_list %} 
+            	<tr >
+  					{% if professor.professor.foto %}
+                        <td class="foto">
+                            <a href="/sistema/usuario/{{professor.professor.user.username}}/"><img src='{% load adminmedia %}{% admin_media_prefix %}{{professor.professor.foto|thumbnail:"50x50"}}'/></a>
+                        </td>
+                    {% else %}
+                        <td class="foto">
+                            <a href="/sistema/usuario/{{professor.professor.user.username}}/"><img src='{% load adminmedia %}{% admin_media_prefix %}img/admin/padrao_50x50.png'/></a>
+                        </td>
+                    {% endif %}
+                    <th width="100%">
+                    	<a href="/sistema/usuario/{{professor.professor.user.username}}/"><p class="titulo_nome">{{ professor.professor.nome|title }}</p></a>
+                        <p class="disciplina">{{ professor.disciplina.disciplina.nome|title }}</p>
+                        <p><a href="mailto:{{professor.professor.email}}">{{professor.professor.email}}</a></p>
+                    </th>
+                </tr>
+            {% endfor %}
+            </table>
+             <div class="pagination"  style="text-align:center; ">
+                    <span class="step-links">
+                        {% if professores_list.has_previous %}
+                            <a href="?pp={{ professores_list.previous_page_number }}">anterior<<</a>
+                        {% endif %}
+                
+                        <span class="current">
+                            P&aacute;gina {{ professores_list.number }} de {{ professores_list.paginator.num_pages }} 
+                        </span>
+                
+                        {% if professores_list.has_next %}
+                            <a href="?pp={{ professores_list.next_page_number }}">>>pr&oacute;xima</a>
+                        {% endif %}                   
+                   </span>
+               </div>
+        {% else%}
+       		 <ul class="titulo_direita">
+        	<li><span >Professores</span></li>
+        	</ul>
+        	<p style="text-align:center">Professores n&atilde;o vinculados</p>
+        {%endif%}
+        </div>
+        </div>
+  </div>
+</div>
