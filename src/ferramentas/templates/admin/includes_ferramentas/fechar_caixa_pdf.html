@@ -1,13 +1,3 @@
-<style>
-  input[type="text"], textarea {
-    width:40px !important;
-  }
-  #produtos td, #produtos th{text-align:center;text-transform:uppercase !important; padding-right:5px;padding-left:5px;}
-  #produto th{text-align:left; width:50%;text-transform:uppercase !important; padding-right:5px;padding-left:5px;}
-  #produto td{text-align:right;text-transform:uppercase !important; padding-right:5px;padding-left:5px;}
-  #compras td, #compras th, #compras ul{text-align:center !important;text-transform:uppercase !important; padding-right:5px;padding-left:5px;}
-  th, td{padding-right:5px !important;padding-left:5px !important;}
-</style>
 
 {% block content %}
 <div id="content-main">
@@ -40,15 +30,31 @@
                 	<th >
                     	Data Hora Abertura
                     </th>
-                	<td >
+                	<td colspan="2">
                     	{{ c.data_hora_abertura|date:"d/m/Y" }} às {{ c.data_hora_abertura|time:"H:i"}}h
                     </td>
                 </tr>
-<tr>
+                <tr>
+                	 <th>
+                    	Valor Inicial
+                    </th>
+                    <td colspan="2">
+                    	R$ {{ c.valor_inicial}}
+                    </td>
+                </tr>
+                <tr>
+                	<th>
+                    	Valor
+                    </th>
+                    <td colspan="2">
+                    	R$ {{ c.valor }}
+                    </td>
+                </tr>
+                <tr>
                 	<th>
                     	Usuario Abertura
                     </th>
-                    <td >
+                    <td colspan="2">
                     	{{ c.usuario_abertura }}
                     </td>
                  </tr>
@@ -56,7 +62,7 @@
                  	<th>
                     	Data Hora Fechamento
                     </th>
-                    <td >
+                    <td colspan="2">
                     	{%  if c.data_hora_fechamento %}{{ c.data_hora_fechamento|date:"d/m/Y"  }}  às {{ c.data_hora_fechamento|time:"H:i" }}h {% endif %}
                     </td>
                  </tr>
@@ -64,20 +70,11 @@
                  	<th>
                     	Usuario Fechamento
                     </th>
-                    <td >
+                    <td colspan="2">
                     	{% if c.usuario_fechamento %}{{ c.usuario_fechamento }} {% endif %}
                     </td>
                     
                 </tr>
-                <tr>
-                	 <th>
-                    	Valor Inicial
-                    </th>
-                    <td >
-                    	R$ {{ c.valor_inicial}}
-                    </td>
-                </tr>
-                
                 <tr>   
                  	<th>
                     	Vendas à Vista
@@ -85,17 +82,21 @@
                     <td>
                     	R$ {% if c.total_vendas_avista %}{{ c.total_vendas_avista }} {% else %} 0 {% endif %}
                     </td>
-                   
+                    <td>
+                    	{% if c.vendas_avista %}{{ c.vendas_avista }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                 <tr>   
                  	<th>
-                    	Adiantamentos de vendas
+                    	Vendas à prazo
                     </th>
                     <td>
                     	R$ {% if c.total_vendas_aprazo%}{{ c.total_vendas_aprazo}} {% else %} 0 {% endif %}
                     </td>
-                   
+                    <td>
+                    	{% if c.vendas_aprazo%}{{ c.vendas_aprazo }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                 <tr>   
@@ -105,26 +106,20 @@
                     <td>
                     	R$ {% if c.total_vendas_acartao %}{{ c.total_vendas_acartao }} {% else %} 0 {% endif %}
                     </td>
-                   
-                    
-                </tr>
-<tr>   
-                 	<th>
-                    	Recebimentos
-                    </th>
                     <td>
-                    	R$ {% if c.total_recebimentos %}{{ c.total_recebimentos }} {% else %} 0 {% endif %}
+                    	{% if c.vendas_acartao %}{{ c.vendas_acartao }} {% else %} 0 {% endif %}
                     </td>
-                   
                     
                 </tr>
-
                 <tr>   
                  	<th>
                     	Recargas OI
                     </th>
                     <td>
                     	R$ {% if c.total_recargas_oi %}{{ c.total_recargas_oi }} {% else %} 0 {% endif %}
+                    </td>
+                    <td>
+                    	{% if c.recargas_oi %}{{ c.recargas_oi }} {% else %} 0 {% endif %}
                     </td>
                     
                 </tr>
@@ -135,7 +130,9 @@
                     <td>
                     	R$ {% if c.total_recargas_tim %}{{ c.total_recargas_tim }} {% else %} 0 {% endif %}
                     </td>
-                    
+                    <td>
+                    	{% if c.recargas_tim %}{{ c.recargas_tim }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                  <tr>   
@@ -145,7 +142,9 @@
                     <td>
                     	R$ {% if c.total_recargas_claro %}{{ c.total_recargas_claro }} {% else %} 0 {% endif %}
                     </td>
-                   
+                    <td>
+                    	{% if c.recargas_claro %}{{ c.recargas_claro }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                  <tr>   
@@ -155,23 +154,23 @@
                     <td>
                     	R$ {% if c.total_recargas_vivo %}{{ c.total_recargas_vivo }} {% else %} 0 {% endif %}
                     </td>
-                    
+                    <td>
+                    	{% if c.recargas_vivo %}{{ c.recargas_vivo }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
-
-                 <tr>   
+			<tr>   
                  	<th>
                     	Recargas OUTRAS
                     </th>
                     <td>
                     	R$ {% if c.total_recargas_outras %}{{ c.total_recargas_outras }} {% else %} 0 {% endif %}
                     </td>
-                    
+                    <td>
+                    	{% if c.recargas_outras %}{{ c.recargas_outras }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
-			<tr>
-				<th colspan=2 style='text-align:right'> TOTAL R$ {{ c.valor }}</th>
-			</tr>
                  </table>
                  <br><br>
             {% endfor %}
@@ -193,56 +192,45 @@
                     </th>
                 </tr>   
             	<tr>
-				<th>
-                    	Usuario 
-                    </th>
                 	<th>
                     	Data Hora 
                     </th>
-
-                    <th>
-                    	Observação
-                    </th> 
                     <th>
                     	Valor 
                     </th>                    
-                                       
+                    <th>
+                    	Usuario 
+                    </th>
+                    <th>
+                    	Observação
+                    </th>                    
                 </tr>
             
       
       		{% for r in retiradas %}
             	<tr class="{% cycle 'row2' 'row1'%}">
-
-                    <td>
-                    	{{ r.usuario}}
-                    </td>
                 	<td>
                     	{{ r.data_hora|date:"d/m/Y" }} às {{ r.data_hora|time:"H:i"}}h
-                    </td>
-
-                    <td>
-                    	{{ r.observacao  }}
                     </td>
                     <td>
                     	R$ {{ r.valor }}
                     </td>
                     
+                    <td>
+                    	{{ r.usuario}}
+                    </td>
                     
+                    <td>
+                    	{{ r.observacao  }}
+                    </td>
                                        
                 </tr>
-		
-
             {% endfor %}
-				<tr>
-				<th colspan=4 style='text-align:RIGHT'> TOTAL R$ {{total_retiradas}} </th>
-			</tr>
           </table>
        </div>
        <br>
        <br>
       {% endif %}
-      <br>
-       <br>
       <div id="changelist" class="module filtered">
             <table width="100%" border="1px" id="produtos">
             	<tr>
@@ -251,20 +239,22 @@
                     </th>
                 </tr>   
             	<tr>
-
-                    <th style='width:33%;'>
-                    	TOTAL VENDIDO
-                    </th>                    
-                    <th style='width:33%;'>                    	TOTAL DE RETIRADAS
-                    </th>   
                 	<th>
-                    	VALOR EM CAIXA
-                    </th>                
+                    	Valor Final Caixa
+                    </th>
+                    <th>
+                    	Valor Total Arrecadado
+                    </th>                    
+                    <th>
+                    	Valor Total de Retiradas
+                    </th>                   
                 </tr>
             
       
             	<tr class="row2%}">
-
+                	<td>
+                    	R$ {{ total_caixa }}
+                    </td>
                     <td>
                     	R$ {{ total }}
                     </td>
@@ -272,66 +262,14 @@
                     <td>
                     	R$ {{total_retiradas}}
                     </td>
-                	<td>
-                    	R$ {{ total_caixa }}
-                    </td>
                                        
                 </tr>
            </table> 
        </div>
-<br><br>
-      {% if estoques %}
-      <div id="changelist" class="module filtered">
-            
-	{% regroup estoques by caixa as estoquelist %}
-		{% for estoques in estoquelist %}
-		<table width="100%" border="1px" id="produtos">
-            <tr>
-                	<th colspan="5">
-                       <div style="text-align:center">ESTOQUE {{ estoques.grouper}}
-</div>
-                    </th>
-                </tr>
-            <tr>
-            	<th>PRODUTOS</th>
-                <th>INICIO</th>
-                <th>ENTRADA</th>
-                <th>SAIDA</th>
-                <th>SALDO</th>
-            </tr>
-            {% for estoque in estoques.list|dictsort:'produto.tipo.nome' %}
-            	<tr>
-                	<td>{{ estoque.produto|upper }}</td>
-                	<td> {{ estoque.inicio}} </td>
-                    <td> {{ estoque.entrada}} </td>
-					<td> {{ estoque.saida}} </td>
-					<td> {{ estoque.saldo}} </td>
-                </tr>
-            {% endfor %}
-		</table>
-		<br><br>
-            {% endfor %}
-            
-       </div>
-      {% endif %}
-       
      {% if erro %}
      	{{ erro }}
-     {% else %}
-		{% if caixa %}
-        <div style="padding:10px;font-size:16px;text-align:center">
-        
-        	
-        
-        	 
-        {% endif%}
-       </div> 
-    {% endif%}
-      <br><br>
-     									
-    </div>
-
     
+    {% endif%}
     {% endif %}
   </div>
 </div>

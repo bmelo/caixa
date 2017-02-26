@@ -20,7 +20,7 @@ import datetime
 import cStringIO as StringIO
 import ho.pisa as pisa
 import cgi
-
+import time
 import os
 import math
 login_required = user_passes_test(lambda u: u.is_authenticated(),login_url='/admin')
@@ -63,8 +63,7 @@ def lista_clientes_nome(request):
         if not pessoas:
             erro = u' Nenhum Cliente encontrado com este nome'
     else: 
-        pessoas = []
-        erro = u'Nome do cliente não digitado'
+        pessoas = Pessoa.objects.all() 
         
     if request.GET.get('pdf'):
         return render_to_pdf('admin/includes_ferramentas/cliente_nome_pdf.html',locals())
@@ -92,6 +91,7 @@ def lista_clientes_endereco(request):
 
 @login_required
 def relatorio_cliente_atraso(request):
+    title = u'Relatório de Clientes em atraso'
     vendas = Venda.objects.filter(previsao_pagamento__lte = datetime.date.today(),pagamento = 2)
     if not vendas:
         erro = u'Não existe clientes em atraso no pagamento'
@@ -111,53 +111,88 @@ def relatorio_vendas(request):
     for i in range(ano_inicio,ano_fim):
             anos.append(i)
     if request.method == 'POST':
-        try:
-            if request.POST.get('ano_inicio') and request.POST.get('mes_inicio') and request.POST.get('dia_inicio') and request.POST.get('ano_termino') and request.POST.get('mes_termino') and request.POST.get('dia_termino'):
-                 data_inicio = datetime.date(int(request.POST.get('ano_inicio')),int(request.POST.get('mes_inicio')),int(request.POST.get('dia_inicio')))
-                 data_fim = datetime.date(int(request.POST.get('ano_termino')),int(request.POST.get('mes_termino')),int(request.POST.get('dia_termino')))
-                 
-                 if request.POST.get('hoje'):
-                     venda_avista = Venda.objects.filter(pagamento = 1,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
-                     venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
-                     venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
-                 elif request.POST.get('mes'):
+            try:
+                if request.POST.get('ano_inicio') and request.POST.get('mes_inicio') and request.POST.get('dia_inicio') and request.POST.get('ano_termino') and request.POST.get('mes_termino') and request.POST.get('dia_termino'):
+                     data_inicio = datetime.date(int(request.POST.get('ano_inicio')),int(request.POST.get('mes_inicio')),int(request.POST.get('dia_inicio')))
+                     data_fim = datetime.date(int(request.POST.get('ano_termino')),int(request.POST.get('mes_termino')),int(request.POST.get('dia_termino')))
+                     data_inicio_str = str(data_inicio)
+                     data_fim_str = str(data_fim)
+                     if request.POST.get('hoje'):
+                         hoje = request.POST.get('hoje')
+                         venda_avista = Venda.objects.filter(pagamento = 1,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
+                         venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
+                         venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
+                     elif request.POST.get('mes'):
+                         mes = request.POST.get('mes')
+                         venda_avista = Venda.objects.filter(pagamento = 1,data_venda__month=int(datetime.datetime.today().month))
+                         venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__month=int(datetime.datetime.today().month))
+                         venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__month=int(datetime.datetime.today().month))
                      
-                     venda_avista = Venda.objects.filter(pagamento = 1,data_venda__month=int(datetime.datetime.today().month))
-                     venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__month=int(datetime.datetime.today().month))
-                     venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__month=int(datetime.datetime.today().month))
-                 
-                 else:
-                     venda_avista = Venda.objects.filter(pagamento = 1,data_venda__range=(data_inicio, data_fim))
-                     venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__range=(data_inicio, data_fim))
-                     venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__range=(data_inicio, data_fim))
-                 total_avista = 0
-                 total_aprazo = 0
-                 total_acartao = 0  
-                 saldo_devedor_prazo = 0
-                 for v in venda_avista:
-                     total_avista  = total_avista + v.valor_pago
-                 for v in venda_aprazo:
-                     total_aprazo  = total_aprazo + v.valor_pago
-                     saldo_devedor_prazo = saldo_devedor_prazo + math.fabs(v.troco)
-                 for v in venda_acartao:
-                     total_acartao  = total_acartao + v.valor_pago
+                     else:
+                         venda_avista = Venda.objects.filter(pagamento = 1,data_venda__range=(data_inicio, data_fim))
+                         venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__range=(data_inicio, data_fim))
+                         venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__range=(data_inicio, data_fim))
+                     total_avista = 0
+                     total_aprazo = 0
+                     total_acartao = 0  
+                     saldo_devedor_prazo = 0
+                     for v in venda_avista:
+                         total_avista  = total_avista + v.valor_pago
+                     for v in venda_aprazo:
+                         total_aprazo  = total_aprazo + v.valor_pago
+                         saldo_devedor_prazo = saldo_devedor_prazo + math.fabs(v.troco)
+                     for v in venda_acartao:
+                         total_acartao  = total_acartao + v.valor_pago
+                         
                      
-                 if request.GET.get('pdf'):
-                    return render_to_pdf('admin/includes_ferramentas/relatorio_vendas_pdf.html',locals())
-            else:
+                else:
+                    venda_avista= []
+                    venda_aprazo = []
+                    venda_acartao = []
+                    erro = 'Selecione as datas de inicio e termino do intervalo'
+            except ValueError:
                 venda_avista= []
                 venda_aprazo = []
                 venda_acartao = []
                 erro = 'Selecione as datas de inicio e termino do intervalo'
-        except ValueError:
+    else:
+        if request.GET.get('pdf'):
+                     data_inicio_str = str(request.GET.get('data_inicio'))
+                     data_fim_str = str(request.GET.get('data_fim'))
+                     
+                     data_inicio = datetime.date(int(data_inicio_str[:4]),int(data_inicio_str[5:7]),int(data_inicio_str[8:10]))  
+                     data_fim = datetime.date(int(data_fim_str[:4]),int(data_fim_str[5:7]),int(data_fim_str[8:10]))  
+                 
+                     if request.GET.get('hoje'):
+                         hoje = request.GET.get('hoje')
+                         venda_avista = Venda.objects.filter(pagamento = 1,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
+                         venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
+                         venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__year=int(datetime.datetime.today().year),data_venda__month=int(datetime.datetime.today().month),data_venda__day=int(datetime.datetime.today().day))
+                     elif request.GET.get('mes'):
+                         mes = request.GET.get('mes')
+                         venda_avista = Venda.objects.filter(pagamento = 1,data_venda__month=int(datetime.datetime.today().month))
+                         venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__month=int(datetime.datetime.today().month))
+                         venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__month=int(datetime.datetime.today().month))
+                     else:
+                         venda_avista = Venda.objects.filter(pagamento = 1,data_venda__range=(data_inicio, data_fim))
+                         venda_aprazo = Venda.objects.filter(pagamento = 2,data_venda__range=(data_inicio, data_fim))
+                         venda_acartao = Venda.objects.filter(pagamento = 3,data_venda__range=(data_inicio, data_fim))
+                     total_avista = 0
+                     total_aprazo = 0
+                     total_acartao = 0  
+                     saldo_devedor_prazo = 0
+                     for v in venda_avista:
+                         total_avista  = total_avista + v.valor_pago
+                     for v in venda_aprazo:
+                         total_aprazo  = total_aprazo + v.valor_pago
+                         saldo_devedor_prazo = saldo_devedor_prazo + math.fabs(v.troco)
+                     for v in venda_acartao:
+                         total_acartao  = total_acartao + v.valor_pago
+                     return render_to_pdf('admin/includes_ferramentas/relatorio_vendas_pdf.html',locals())
+        else:
             venda_avista= []
             venda_aprazo = []
             venda_acartao = []
-            erro = 'Selecione as datas de inicio e termino do intervalo'
-    else:
-        venda_avista= []
-        venda_aprazo = []
-        venda_acartao = []
     
     return render_to_response('admin/includes_ferramentas/relatorio_vendas.html',locals(),context_instance=RequestContext(request))
 
@@ -175,9 +210,12 @@ def relatorio_entradas(request):
             if request.POST.get('ano_inicio') and request.POST.get('mes_inicio') and request.POST.get('dia_inicio') and request.POST.get('ano_termino') and request.POST.get('mes_termino') and request.POST.get('dia_termino'):
                  data_inicio = datetime.date(int(request.POST.get('ano_inicio')),int(request.POST.get('mes_inicio')),int(request.POST.get('dia_inicio')))
                  data_fim = datetime.date(int(request.POST.get('ano_termino')),int(request.POST.get('mes_termino')),int(request.POST.get('dia_termino')))
-                 
+                 data_inicio_str = str(data_inicio)
+                 data_fim_str = str(data_fim)
                  if request.POST.get('hoje'):
                      entradas = EntradaEstoque.objects.filter(data_hora__year=int(datetime.datetime.today().year),data_hora__month=int(datetime.datetime.today().month),data_hora__day=int(datetime.datetime.today().day))
+                 elif request.POST.get('mes'):
+                     entradas = EntradaEstoque.objects.filter(data_hora__year=int(datetime.datetime.today().year),data_hora__month=int(datetime.datetime.today().month))
                  else:
                      entradas = EntradaEstoque.objects.filter(data_hora__range=(data_inicio, data_fim))
                  total_produtos = 0
@@ -196,45 +234,59 @@ def relatorio_entradas(request):
         total_produtos = 0
     
     if request.GET.get('pdf'):
+        data_inicio_str = str(request.GET.get('data_inicio'))
+        data_fim_str = str(request.GET.get('data_fim'))
+                     
+        data_inicio = datetime.date(int(data_inicio_str[:4]),int(data_inicio_str[5:7]),int(data_inicio_str[8:10]))  
+        data_fim = datetime.date(int(data_fim_str[:4]),int(data_fim_str[5:7]),int(data_fim_str[8:10]))  
+        if request.GET.get('hoje'):
+            entradas = EntradaEstoque.objects.filter(data_hora__year=int(datetime.datetime.today().year),data_hora__month=int(datetime.datetime.today().month),data_hora__day=int(datetime.datetime.today().day))
+        elif request.GET.get('mes'):
+            entradas = EntradaEstoque.objects.filter(data_hora__year=int(datetime.datetime.today().year),data_hora__month=int(datetime.datetime.today().month))
+        else:
+            entradas = EntradaEstoque.objects.filter(data_hora__range=(data_inicio, data_fim))
+        total_produtos = 0
+        for e in entradas:
+            total_produtos  = total_produtos + e.quantidade
         return render_to_pdf('admin/includes_ferramentas/relatorio_entradas_pdf.html',locals())
-    else:
-        return render_to_response('admin/includes_ferramentas/relatorio_entradas.html',locals(),context_instance=RequestContext(request))
+    
+    return render_to_response('admin/includes_ferramentas/relatorio_entradas.html',locals(),context_instance=RequestContext(request))
 
 
 @login_required
 def relatorio_aniversariantes(request):
-    title = u'Relatório de Entrada de Mercadoria'
+    title = u'Relatório de Aniversariantes'
     anos = []
     ano_inicio = int(datetime.date.today().year) - 5
     ano_fim = int(datetime.date.today().year) + 5
     for i in range(ano_inicio,ano_fim):
             anos.append(i)
     if request.method == 'POST':
-        try:
-            if request.POST.get('ano_inicio') and request.POST.get('mes_inicio') and request.POST.get('dia_inicio') and request.POST.get('ano_termino') and request.POST.get('mes_termino') and request.POST.get('dia_termino'):
-                 data_inicio = datetime.date(int(request.POST.get('ano_inicio')),int(request.POST.get('mes_inicio')),int(request.POST.get('dia_inicio')))
-                 data_fim = datetime.date(int(request.POST.get('ano_termino')),int(request.POST.get('mes_termino')),int(request.POST.get('dia_termino')))
-                 
-                 if request.POST.get('hoje'):
-                     pessoas = Pessoa.objects.filter(data_nascimento__month=int(datetime.datetime.today().month),data_nascimento__day=int(datetime.datetime.today().day))
-                 elif request.POST.get('mes'):
-                     pessoas = Pessoa.objects.filter(data_nascimento__month=int(datetime.datetime.today().month))    
-                 else:
-                     pessoas = Pessoa.objects.filter(data_nascimento__range=(data_inicio, data_fim))
-                 
+            if request.POST.get('hoje'):
+                hoje = request.POST.get('hoje')
+                pessoas = Pessoa.objects.filter(data_nascimento__month=int(datetime.datetime.today().month),data_nascimento__day=int(datetime.datetime.today().day))
+            elif request.POST.get('mes'):
+                mes = request.POST.get('mes')
+                pessoas = Pessoa.objects.filter(data_nascimento__month=int(datetime.datetime.today().month))
             else:
                 pessoas = []
-                erro = 'Selecione as datas de inicio e termino do intervalo'
-        except ValueError:
-            pessoas = []
-            erro = 'Selecione as datas de inicio e termino do intervalo'
+    
+        
     else:
         pessoas = []
     
     if request.GET.get('pdf'):
-        return render_to_pdf('admin/includes_ferramentas/relatorio_aniversariantes_pdf.html',locals())
-    else:
-        return render_to_response('admin/includes_ferramentas/relatorio_aniversariantes.html',locals(),context_instance=RequestContext(request))
+            if request.GET.get('hoje'):
+                hoje = request.GET.get('hoje')
+                pessoas = Pessoa.objects.filter(data_nascimento__month=int(datetime.datetime.today().month),data_nascimento__day=int(datetime.datetime.today().day))
+            elif request.GET.get('mes'):
+                mes = request.GET.get('mes')
+                pessoas = Pessoa.objects.filter(data_nascimento__month=int(datetime.datetime.today().month))
+            else:
+                pessoas = []
+            return render_to_pdf('admin/includes_ferramentas/relatorio_aniversariantes_pdf.html',locals())
+        
+    return render_to_response('admin/includes_ferramentas/relatorio_aniversariantes.html',locals(),context_instance=RequestContext(request))
 
 
 @login_required
@@ -283,7 +335,7 @@ def cliente(request):
                 if v.aberto == 1:
                     troco = troco + math.fabs(v.total - v.valor_pago)
             lista.sort(maior)          
-            title = 'Cliente - ' + str(pessoa.nome)
+            title = 'Cliente - ' + pessoa.nome
         except Pessoa.DoesNotExist:
             pessoa = []
             erro =  u'Cliente não encontrado'
@@ -299,45 +351,50 @@ def cliente(request):
 
 @login_required
 def cliente_iniciar_venda(request,cliente = 0):
-      vendedor = Pessoa.objects.get(user = request.user)  
       try:
-        estacao = EstacaoOperador.objects.get(operador = vendedor)
-      except EstacaoOperador.DoesNotExist:
-        estacao = []
-      if estacao:
+          vendedor = Pessoa.objects.get(user = request.user)
+      except Pessoa.DoesNotExist:
+          vendedor = []
+      if vendedor:
           try:
-                  caixa = Caixa.objects.get(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),situacao = '1',estacao = estacao.estacao)
-          except Caixa.DoesNotExist:
-                  caixa = []
-          if caixa:  
-               
+            estacao = EstacaoOperador.objects.get(operador = vendedor)
+          except EstacaoOperador.DoesNotExist:
+            estacao = []
+          if estacao:
               try:
-                  pessoa = Pessoa.objects.get(id = cliente) 
-                  vend = Venda(vendedor = vendedor, cliente = pessoa)
-              
-              except Pessoa.DoesNotExist:
-                  vend = Venda(vendedor = vendedor)
-              vend.save()
-              next = '/admin/sispag/venda/' + str(vend.id) + '/'   
-              return HttpResponseRedirect(next)
+                      caixa = Caixa.objects.get(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),situacao = '1',estacao = estacao.estacao)
+              except Caixa.DoesNotExist:
+                      caixa = []
+              if caixa:  
+                   
+                  try:
+                      pessoa = Pessoa.objects.get(id = cliente) 
+                      vend = Venda(vendedor = vendedor, cliente = pessoa)
+                  
+                  except Pessoa.DoesNotExist:
+                      vend = Venda(vendedor = vendedor)
+                  vend.save()
+                  next = '/admin/sispag/venda/' + str(vend.id) + '/'   
+                  return HttpResponseRedirect(next)
+              else:
+                   request.user.message_set.create(message='O caixa se encontra fechado, para iniciar uma venda o caixa precisa estar aberto.')
+                   try:
+                      pessoa = Pessoa.objects.get(id = cliente) 
+                               
+                   except Pessoa.DoesNotExist:
+                      pessoa = []
+                   
+                   if pessoa:
+                       next = '/admin/sispag/cliente/?id=' + str(pessoa.id)
+                       return HttpResponseRedirect(next)
+                   else:
+                       return HttpResponseRedirect('/admin/')
           else:
-               request.user.message_set.create(message='O caixa se encontra fechado, para iniciar uma venda o caixa precisa estar aberto.')
-               try:
-                  pessoa = Pessoa.objects.get(id = cliente) 
-                           
-               except Pessoa.DoesNotExist:
-                  pessoa = []
-               
-               if pessoa:
-                   next = '/admin/sispag/cliente/?id=' + str(pessoa.id)
-                   return HttpResponseRedirect(next)
-               else:
-                   request.user.message_set.create(message='Pessoa nao encontrada.')
-                   return HttpResponseRedirect('/admin/')
+               erro = 'O usuario logado ainda não foi relacionado com nunhuma estação de trabalho'
+               return HttpResponseRedirect('/admin/')
       else:
-           request.user.message_set.create(message='O usuario logado ainda não foi relacionado com nenhuma estação de trabalho')
-           return HttpResponseRedirect('/admin/')
-
+               request.user.message_set.create(message='O usuario logado não possui uma pessoa cadastrada')
+               return HttpResponseRedirect('/admin/')
 
 @login_required
 def cliente_finalizar_venda(request,venda = 0):
@@ -503,7 +560,35 @@ def cliente_pagar_prazo(request,venda = 0):
         vend = []
         erro = u'Venda não encontrada'
     return render_to_response('admin/includes_ferramentas/cliente_venda_prazo.html',locals(),context_instance=RequestContext(request))   
-       
+
+
+@login_required
+def cliente_venda_cupom(request,venda = 0): 
+    title = 'Cliente cupom venda'
+    try:
+        vend = Venda.objects.get(id = int(venda))
+        if vend.troco < 0:
+            desconto = True
+    except Venda.DoesNotExist:
+        vend = []
+    if not vend:
+        erro = 'Venda não encontrada'
+    return render_to_pdf('admin/includes_ferramentas/cliente_venda_cupom.html',locals())
+        
+
+@login_required
+def cliente_venda_prazo_cupom(request,venda = 0): 
+    title = 'Cliente cupom venda'
+    try:
+        vend = Venda.objects.get(id = int(venda))
+        if vend.troco < 0:
+            desconto = True
+    except Venda.DoesNotExist:
+        vend = []
+    if not vend:
+        erro = 'Venda não encontrada'
+    return render_to_pdf('admin/includes_ferramentas/cliente_venda_prazo_cupom.html',locals())
+
 @login_required
 def cliente_venda(request,venda = 0): 
     title = 'Cliente'
@@ -563,6 +648,7 @@ def cliente_venda(request,venda = 0):
                             'troco': troco,
                             'dinheiro_recebido': True,
                             'finalizada': True,
+                            'entregador': request.POST.get('entregador') ,
                             }
                     v = VendaForm(data)
                 else:
@@ -592,6 +678,9 @@ def cliente_venda(request,venda = 0):
                     vend.pagamento = request.POST.get('pagamento')
                     vend.valor_pago = request.POST.get('valor_pago')
                     vend.dinheiro_recebido = True
+                    if request.POST.get('entregador'):
+                        entregador = Pessoa.objects.get(id = int(request.POST.get('entregador')))
+                        vend.entregador = entregador
                     vend.total = total
                     vend.troco = troco
                     vend.save()
@@ -670,6 +759,7 @@ def cliente_venda(request,venda = 0):
     except Venda.DoesNotExist:
         vend = []
         erro = u'Venda não encontrada'
+    
     return render_to_response('admin/includes_ferramentas/cliente_venda.html',locals(),context_instance=RequestContext(request))
   
 
@@ -785,43 +875,49 @@ def retirada_caixa(request):
 def fechar_caixa(request):
   #situacao_caixa { 0 -> Fechado, 1 -> Aberto }
   title = 'Fechamento de Caixa'
-  pessoa = Pessoa.objects.get(user = request.user)
   try:
-    estacao = EstacaoOperador.objects.get(operador = pessoa)
-  except EstacaoOperador.DoesNotExist:
-    estacao = []
-  if estacao:
-      caixas = Caixa.objects.filter(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),estacao = estacao.estacao)
-      retiradas = Retirada.objects.filter(data_hora__year = int(datetime.datetime.today().year),data_hora__month = int(datetime.datetime.today().month),data_hora__day = int(datetime.datetime.today().day))
-      total_caixa = 0
-      total_retiradas = 0
-      total = 0
-      for c in caixas:
-          total_caixa = total_caixa + float(c.valor)
-      for retirada in retiradas:
-          total_caixa  = total_caixa - float(retirada.valor)
-          total_retiradas = total_retiradas + float(retirada.valor)
-      total  = total_caixa + total_retiradas
-      if request.method == 'POST':
-          try:
-              caixa = Caixa.objects.get(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),situacao = '1',estacao = estacao.estacao)
-              caixa.situacao = '0'
-              pessoa = Pessoa.objects.get(user = request.user)
-              caixa.usuario_fechamento = pessoa
-              caixa.data_hora_fechamento = datetime.datetime.now()
-              caixa.save()
-              next = '/admin/sispag/fechar_caixa/'
-              request.user.message_set.create(message='CAIXA FECHADO')
-              return HttpResponseRedirect(next)
-          except Caixa.DoesNotExist:
-              caixa = []
+      pessoa = Pessoa.objects.get(user = request.user)
+  except Pessoa.DoesNotExist:
+      pessoa= []
+  if pessoa:
+      try:
+        estacao = EstacaoOperador.objects.get(operador = pessoa)
+      except EstacaoOperador.DoesNotExist:
+        estacao = []
+      if estacao:
+          caixas = Caixa.objects.filter(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),estacao = estacao.estacao)
+          retiradas = Retirada.objects.filter(data_hora__year = int(datetime.datetime.today().year),data_hora__month = int(datetime.datetime.today().month),data_hora__day = int(datetime.datetime.today().day))
+          total_caixa = 0
+          total_retiradas = 0
+          total = 0
+          for c in caixas:
+              total_caixa = total_caixa + float(c.valor)
+          for retirada in retiradas:
+              total_caixa  = total_caixa - float(retirada.valor)
+              total_retiradas = total_retiradas + float(retirada.valor)
+          total  = total_caixa + total_retiradas
+          if request.method == 'POST':
+              try:
+                  caixa = Caixa.objects.get(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),situacao = '1',estacao = estacao.estacao)
+                  caixa.situacao = '0'
+                  pessoa = Pessoa.objects.get(user = request.user)
+                  caixa.usuario_fechamento = pessoa
+                  caixa.data_hora_fechamento = datetime.datetime.now()
+                  caixa.save()
+                  next = '/admin/sispag/fechar_caixa/'
+                  request.user.message_set.create(message='CAIXA FECHADO')
+                  return HttpResponseRedirect(next)
+              except Caixa.DoesNotExist:
+                  caixa = []
+          else:
+              try:
+                  caixa = Caixa.objects.get(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),situacao = '1',estacao = estacao.estacao)
+              except Caixa.DoesNotExist:
+                  caixa = [] 
       else:
-          try:
-              caixa = Caixa.objects.get(data_hora_abertura__year = int(datetime.datetime.today().year),data_hora_abertura__month = int(datetime.datetime.today().month),data_hora_abertura__day = int(datetime.datetime.today().day),situacao = '1',estacao = estacao.estacao)
-          except Caixa.DoesNotExist:
-              caixa = [] 
+          erro = 'O usuario logado ainda não foi relacionado com nunhuma estação de trabalho'
   else:
-      erro = 'O usuario logado ainda não foi relacionado com nunhuma estação de trabalho'
+      erro = 'O usuario logado ainda não possui uma pessoa cadastrada!'
   return render_to_response('admin/includes_ferramentas/fechar_caixa.html', locals(), context_instance=RequestContext(request))
        
 

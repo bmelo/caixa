@@ -128,8 +128,8 @@ background-color:#FFF;
         {% else %}
                 
                  <div align="center" >
-                                         <div style="padding-top:10px;font-size:24px;text-align:center">REL&Aacute;TORIO DE ANIVERSARIANTES</div> <br> <br>
-                                               
+ <div style="padding-top:10px;font-size:24px;text-align:center">REL&Aacute;TORIO DE ANIVERSARIANTES {% if hoje %} DE HOJE {% now "j" %} de {% now "F" %} de {% now "Y" %} 
+{% else%}{% if mes %} DO M&Ecirc;S {% now "F"%} de {% now "Y"%} {% endif %}{% endif %} </div> <br> <br>                                               
     <div class="app" style="padding-left:20px">
                                      <div id="changelist" class="module filtered">
                                     <table width="100%" id="produtos">
@@ -139,7 +139,7 @@ background-color:#FFF;
                                         	Nome
                                       </th>
                                         <th style="width:20%">
-                                        	Data Aniversario
+                                        	Data de Nascimento
                                       </th>
                                         <th style="width:20%">
                                         	Telefone
@@ -207,121 +207,8 @@ background-color:#FFF;
             {% endif %}					
             						<form method="POST"> 
                                     <fieldset class="module aligned ">
-  												<h2>Selecione um intervalo para visualizar o relat&oacute;rio</h2>        
-                                            	<div class="form-row inicio  ">
-                       							 	<div>
-                                                 		<label> Inicio :</label>
-                                                     <select id="id_dia_inicio" name="dia_inicio">
-                                                        <option selected="selected" value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                        <option value="10">10</option>
-                                                        <option value="11">11</option>
-                                                        <option value="12">12</option>
-                                                        <option value="13">13</option>
-                                                        <option value="14">14</option>
-                                                        <option value="15">15</option>
-                                                        <option value="16">16</option>
-                                                        <option value="17">17</option>
-                                                        <option value="18">18</option>
-                                                        <option value="19">19</option>
-                                                        <option value="20">20</option>
-                                                        <option value="21">21</option>
-                                                        <option value="22">22</option>
-                                                        <option value="23">23</option>
-                                                        <option value="24">24</option>
-                                                        <option value="25">25</option>
-                                                        <option value="26">26</option>
-                                                        <option value="27">27</option>
-                                                        <option value="28">28</option>
-                                                        <option value="29">29</option>
-                                                        <option value="30">30</option>
-                                                        <option value="31">31</option>
-                                                     </select>
-                                                     <select id="id_mes_inicio" name="mes_inicio">
-                                                        <option selected="selected" value="1">Janeiro</option>
-                                                        <option value="2">Fevereiro</option>
-                                                        <option value="3">Mar&ccedil;o</option>
-                                                        <option value="4">Abril</option>
-                                                        <option value="5">Maio</option>
-                                                        <option value="6">Junho</option>
-                                                        <option value="7">Julho</option>
-                                                        <option value="8">Agosto</option>
-                                                        <option value="9">Setembro</option>
-                                                        <option value="10">Outubro</option>
-                                                        <option value="11">Novembro</option>
-                                                        <option  value="12">Dezembro</option>
-                                                     </select>
-                                                     <select id="id_ano_inicio" name="ano_inicio">
-                                                     {% for ano in anos %}
-                                                        <option value="{{ ano }}">{{ ano }}</option>
-                                                     {% endfor %}
-                                                     </select>
-                                               </div>
-                                            </div>
-                                           <div class="form-row termino  ">
-                       							 	<div>
-                                            	<label> T&eacute;rmino :</label>
-                                                     <select id="id_dia_termino" name="dia_termino">
-                                                        <option selected="selected" value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                        <option value="10">10</option>
-                                                        <option value="11">11</option>
-                                                        <option value="12">12</option>
-                                                        <option value="13">13</option>
-                                                        <option value="14">14</option>
-                                                        <option value="15">15</option>
-                                                        <option value="16">16</option>
-                                                        <option value="17">17</option>
-                                                        <option value="18">18</option>
-                                                        <option value="19">19</option>
-                                                        <option value="20">20</option>
-                                                        <option value="21">21</option>
-                                                        <option value="22">22</option>
-                                                        <option value="23">23</option>
-                                                        <option value="24">24</option>
-                                                        <option value="25">25</option>
-                                                        <option value="26">26</option>
-                                                        <option value="27">27</option>
-                                                        <option value="28">28</option>
-                                                        <option value="29">29</option>
-                                                        <option value="30">30</option>
-                                                        <option value="31">31</option>
-                                                     </select>
-                                                     <select id="id_mes_termino" name="mes_termino">
-                                                        <option selected="selected" value="1">Janeiro</option>
-                                                        <option value="2">Fevereiro</option>
-                                                        <option value="3">Mar&ccedil;o</option>
-                                                        <option value="4">Abril</option>
-                                                        <option value="5">Maio</option>
-                                                        <option value="6">Junho</option>
-                                                        <option value="7">Julho</option>
-                                                        <option value="8">Agosto</option>
-                                                        <option value="9">Setembro</option>
-                                                        <option value="10">Outubro</option>
-                                                        <option value="11">Novembro</option>
-                                                        <option  value="12">Dezembro</option>
-                                                     </select>
-                                                     <select id="id_ano_termino" name="ano_termino">
-                                                     {% for ano in anos %}
-                                                        <option value="{{ ano }}">{{ ano }}</option>
-                                                     {% endfor %}
-                                                     </select>
-                                                 </div>
-                                              </div>
+  												<h2>Selecione uma das op&ccedil;&otilde;es abaixo para tirar o rel&aacute;torio</h2>        
+                                            	
                                               <div class="form-row hoje  ">
                        							 	<div> 
                                                     	<label >Aniversariantes de hoje </label>	
@@ -345,6 +232,12 @@ background-color:#FFF;
                                       
                                       <table width="100%" id="compras">
                                            <tr>
+                                           		{% if mes or hoje %}
+                                                    <td style="border:none">
+                                                         <a href="/admin/sispag/relatorio_aniversariantes/?pdf=1&hoje={{ hoje }}&mes={{ mes }}" target="_blank"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Imprimir</div></a>
+                                                    </td>
+                                                {% endif %}
+                                                
                                             	<td style="border:none">
                                                 	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
                                                 </td>

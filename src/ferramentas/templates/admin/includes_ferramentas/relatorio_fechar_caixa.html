@@ -29,10 +29,9 @@
   input[type="text"], textarea {
     width:40px !important;
   }
-  #produtos td, #produtos th{text-align:center;text-transform:uppercase}
-  #produto th{text-align:left; width:50%;text-transform:uppercase}
-  #produto td{text-align:right;text-transform:uppercase }
-  #compras td, #compras th, #compras ul{text-align:center !important;text-transform:uppercase}
+  #produtos td, #produtos th{text-align:center}
+  #produto td, #produto th{text-align:left; width:50%}
+  #compras td, #compras th, #compras ul{text-align:center !important;}
 </style>
 {% endblock %}
 {% block coltype %}colMS{% endblock %}
@@ -129,8 +128,8 @@
             <table width="100%" border="1px" id="produtos">
             	<tr>
                 	<th >
-                       <div style="text-align:center">HISTORICO DO CAIXA {% if hoje %} {% now "j" %} de {% now "F" %} de {% now "Y" %} 
-{% else%} {{ data_inicio|date:"d/m/Y" }} {% endif %} </div> <br> <br></div>
+                       <div style="text-align:center">HISTORICO DO CAIXA {% if hoje %} DE HOJE {% now "j" %} de {% now "F" %} de {% now "Y" %} 
+{% else%}{% if mes %} DO M&Ecirc;S {% now "F"%} de {% now "Y"%}  {% else %}{% if data_inicio and data_fim %} - {{ data_inicio|date:"d/m/Y" }} - {{ data_fim|date:"d/m/Y"}}{% endif %}{% endif %}{% endif %} </div> <br> <br></div>
                     </th>
                 </tr>
            </table>
@@ -153,7 +152,23 @@
                     	{{ c.data_hora_abertura|date:"d/m/Y" }} às {{ c.data_hora_abertura|time:"H:i"}}h
                     </td>
                 </tr>
-<tr>
+                <tr>
+                	 <th>
+                    	Valor Inicial
+                    </th>
+                    <td colspan="2">
+                    	R$ {{ c.valor_inicial}}
+                    </td>
+                </tr>
+                <tr>
+                	<th>
+                    	Valor
+                    </th>
+                    <td colspan="2">
+                    	R$ {{ c.valor }}
+                    </td>
+                </tr>
+                <tr>
                 	<th>
                     	Usuario Abertura
                     </th>
@@ -178,15 +193,6 @@
                     </td>
                     
                 </tr>
-                <tr>
-                	 <th>
-                    	Valor Inicial
-                    </th>
-                    <td colspan="2">
-                    	R$ {{ c.valor_inicial}}
-                    </td>
-                </tr>
-                
                 <tr>   
                  	<th>
                     	Vendas à Vista
@@ -194,17 +200,21 @@
                     <td>
                     	R$ {% if c.total_vendas_avista %}{{ c.total_vendas_avista }} {% else %} 0 {% endif %}
                     </td>
-                   
+                    <td>
+                    	{% if c.vendas_avista %}{{ c.vendas_avista }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                 <tr>   
                  	<th>
-                    	Adiantamentos de vendas
+                    	Vendas à prazo
                     </th>
                     <td>
                     	R$ {% if c.total_vendas_aprazo%}{{ c.total_vendas_aprazo}} {% else %} 0 {% endif %}
                     </td>
-                   
+                    <td>
+                    	{% if c.vendas_aprazo%}{{ c.vendas_aprazo }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                 <tr>   
@@ -214,26 +224,20 @@
                     <td>
                     	R$ {% if c.total_vendas_acartao %}{{ c.total_vendas_acartao }} {% else %} 0 {% endif %}
                     </td>
-                   
-                    
-                </tr>
-<tr>   
-                 	<th>
-                    	Recebimentos
-                    </th>
                     <td>
-                    	R$ {% if c.total_recebimentos %}{{ c.total_recebimentos }} {% else %} 0 {% endif %}
+                    	{% if c.vendas_acartao %}{{ c.vendas_acartao }} {% else %} 0 {% endif %}
                     </td>
-                   
                     
                 </tr>
-
                 <tr>   
                  	<th>
                     	Recargas OI
                     </th>
                     <td>
                     	R$ {% if c.total_recargas_oi %}{{ c.total_recargas_oi }} {% else %} 0 {% endif %}
+                    </td>
+                    <td>
+                    	{% if c.recargas_oi %}{{ c.recargas_oi }} {% else %} 0 {% endif %}
                     </td>
                     
                 </tr>
@@ -244,7 +248,9 @@
                     <td>
                     	R$ {% if c.total_recargas_tim %}{{ c.total_recargas_tim }} {% else %} 0 {% endif %}
                     </td>
-                    
+                    <td>
+                    	{% if c.recargas_tim %}{{ c.recargas_tim }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                  <tr>   
@@ -254,7 +260,9 @@
                     <td>
                     	R$ {% if c.total_recargas_claro %}{{ c.total_recargas_claro }} {% else %} 0 {% endif %}
                     </td>
-                   
+                    <td>
+                    	{% if c.recargas_claro %}{{ c.recargas_claro }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
                  <tr>   
@@ -264,27 +272,27 @@
                     <td>
                     	R$ {% if c.total_recargas_vivo %}{{ c.total_recargas_vivo }} {% else %} 0 {% endif %}
                     </td>
-                    
+                    <td>
+                    	{% if c.recargas_vivo %}{{ c.recargas_vivo }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
-
-                 <tr>   
+<tr>   
                  	<th>
                     	Recargas OUTRAS
                     </th>
                     <td>
                     	R$ {% if c.total_recargas_outras %}{{ c.total_recargas_outras }} {% else %} 0 {% endif %}
                     </td>
-                    
+                    <td>
+                    	{% if c.recargas_outras %}{{ c.recargas_outras }} {% else %} 0 {% endif %}
+                    </td>
                     
                 </tr>
-			<tr>
-				<th colspan=3 style='text-align:right'> TOTAL R$ {{ c.valor }}</th>
-			</tr>
+
                  </table>
                  <br><br>
             {% endfor %}
-
           
        </div>
       {% endif%}
@@ -299,84 +307,75 @@
             <table width="100%" border="1px" id="produtos">
             	<tr>
                 	<th colspan="4">
-                       <div style="text-align:center">HISTORICO DE RETIRADAS {% if hoje %} {% now "j" %} de {% now "F" %} de {% now "Y" %} 
-{% else%}{% if data_inicio %} {{ data_inicio|date:"d/m/Y" }} {% endif %}{% endif %} </div> <br> <br></div>
+                       <div style="text-align:center">HISTORICO DE RETIRADAS {% if hoje %} DE HOJE {% now "j" %} de {% now "F" %} de {% now "Y" %} 
+{% else%}{% if mes %} DO M&Ecirc;S {% now "F"%} de {% now "Y"%}  {% else %}{% if data_inicio and data_fim %} - {{ data_inicio|date:"d/m/Y" }} - {{ data_fim|date:"d/m/Y"}}{% endif %}{% endif %}{% endif %} </div> <br> <br></div>
                     </th>
                 </tr>   
             	<tr>
-				<th>
-                    	Usuario 
-                    </th>
                 	<th>
                     	Data Hora 
                     </th>
-
-                    <th>
-                    	Observação
-                    </th> 
                     <th>
                     	Valor 
                     </th>                    
-                                       
+                    <th>
+                    	Usuario 
+                    </th>
+                    <th>
+                    	Observação
+                    </th>                    
                 </tr>
             
       
       		{% for r in retiradas %}
             	<tr class="{% cycle 'row2' 'row1'%}">
-
-                    <td>
-                    	{{ r.usuario}}
-                    </td>
                 	<td>
                     	{{ r.data_hora|date:"d/m/Y" }} às {{ r.data_hora|time:"H:i"}}h
-                    </td>
-
-                    <td>
-                    	{{ r.observacao  }}
                     </td>
                     <td>
                     	R$ {{ r.valor }}
                     </td>
                     
+                    <td>
+                    	{{ r.usuario}}
+                    </td>
                     
+                    <td>
+                    	{{ r.observacao  }}
+                    </td>
                                        
                 </tr>
-			
-
             {% endfor %}
-<tr>
-				<th colspan=4 style='text-align:right'> TOTAL R$ {{total_retiradas}} </th>
-			</tr>
-          </table>       </div>
-
- <br>
+          </table>
+       </div>
        <br>
-
+       <br>
+      {% endif %}
       <div id="changelist" class="module filtered">
             <table width="100%" border="1px" id="produtos">
             	<tr>
                 	<th colspan="3">
-                       <div style="text-align:center">HISTORICO FINAL {% if hoje %}{% now "j" %} de {% now "F" %} de {% now "Y" %} 
-{% else%}{% if mes %} {% now "F"%} de {% now "Y"%}  {% else %}{% if data_inicio and data_fim %} - {{ data_inicio|date:"d/m/Y" }} - {{ data_fim|date:"d/m/Y"}}{% endif %}{% endif %}{% endif %} </div> <br> <br></div>
+                       <div style="text-align:center">HISTORICO FINAL {% if hoje %} DE HOJE {% now "j" %} de {% now "F" %} de {% now "Y" %} 
+{% else%}{% if mes %} DO M&Ecirc;S {% now "F"%} de {% now "Y"%}  {% else %}{% if data_inicio and data_fim %} - {{ data_inicio|date:"d/m/Y" }} - {{ data_fim|date:"d/m/Y"}}{% endif %}{% endif %}{% endif %} </div> <br> <br></div>
                     </th>
                 </tr>   
             	<tr>
-
+                	<th>
+                    	Valor Final Caixa
+                    </th>
                     <th>
-                    	TOTAL VENDIDO
-
+                    	Valor Total Arrecadado
                     </th>                    
                     <th>
-                    	TOTAL DE RETIRADAS
-                    </th>   
-                	<th>
-                    	VALOR EM CAIXA
-                    </th>                
+                    	Valor Total de Retiradas
+                    </th>                   
                 </tr>
             
       
             	<tr class="row2%}">
-
+                	<td>
+                    	R$ {{ total_caixa }}
+                    </td>
                     <td>
                     	R$ {{ total }}
                     </td>
@@ -384,52 +383,10 @@
                     <td>
                     	R$ {{total_retiradas}}
                     </td>
-                	<td>
-                    	R$ {{ total_caixa }}
-                    </td>
                                        
                 </tr>
-           </table>
+           </table> 
        </div>
-       <br>
-       <br>
-      {% endif %}
-      {% if estoques %}
-      <div id="changelist" class="module filtered">
-            
-	{% regroup estoques by caixa as estoquelist %}
-		{% for estoques in estoquelist %}
-		<table width="100%" border="1px" id="produtos">
-            <tr>
-                	<th colspan="5">
-                       <div style="text-align:center">ESTOQUE {{ estoques.grouper}}
-</div>
-                    </th>
-                </tr>
-            <tr>
-            	<th>PRODUTOS</th>
-                <th>INICIO</th>
-                <th>ENTRADA</th>
-                <th>SAIDA</th>
-                <th>SALDO</th>
-            </tr>
-            {% for estoque in estoques.list|dictsort:'produto.tipo.nome' %}
-            	<tr>
-                	<td>{{ estoque.produto|upper }}</td>
-                	<td> {{ estoque.inicio}} </td>
-                    <td> {{ estoque.entrada}} </td>
-					<td> {{ estoque.saida}} </td>
-					<td> {{ estoque.saldo}} </td>
-                </tr>
-            {% endfor %}
-		</table>
-		<br><br>
-            {% endfor %}
-            
-       </div>
-      {% endif %}
-
-      
      
         <div style="padding:10px;font-size:16px;text-align:center">
         	<form method="POST"> 
@@ -437,7 +394,7 @@
   												<h2>Selecione um intervalo para visualizar o relat&oacute;rio</h2>        
                                             	<div class="form-row inicio  ">
                        							 	<div>
-                                                 		<label> DIA :</label>
+                                                 		<label> Inicio :</label>
                                                      <select id="id_dia_inicio" name="dia_inicio">
                                                         <option selected="selected" value="1">1</option>
                                                         <option value="2">2</option>
@@ -492,13 +449,76 @@
                                                      </select>
                                                </div>
                                             </div>
+                                           <div class="form-row termino  ">
+                       							 	<div>
+                                            	<label> T&eacute;rmino :</label>
+                                                     <select id="id_dia_termino" name="dia_termino">
+                                                        <option selected="selected" value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                        <option value="18">18</option>
+                                                        <option value="19">19</option>
+                                                        <option value="20">20</option>
+                                                        <option value="21">21</option>
+                                                        <option value="22">22</option>
+                                                        <option value="23">23</option>
+                                                        <option value="24">24</option>
+                                                        <option value="25">25</option>
+                                                        <option value="26">26</option>
+                                                        <option value="27">27</option>
+                                                        <option value="28">28</option>
+                                                        <option value="29">29</option>
+                                                        <option value="30">30</option>
+                                                        <option value="31">31</option>
+                                                     </select>
+                                                     <select id="id_mes_termino" name="mes_termino">
+                                                        <option selected="selected" value="1">Janeiro</option>
+                                                        <option value="2">Fevereiro</option>
+                                                        <option value="3">Mar&ccedil;o</option>
+                                                        <option value="4">Abril</option>
+                                                        <option value="5">Maio</option>
+                                                        <option value="6">Junho</option>
+                                                        <option value="7">Julho</option>
+                                                        <option value="8">Agosto</option>
+                                                        <option value="9">Setembro</option>
+                                                        <option value="10">Outubro</option>
+                                                        <option value="11">Novembro</option>
+                                                        <option  value="12">Dezembro</option>
+                                                     </select>
+                                                     <select id="id_ano_termino" name="ano_termino">
+                                                     {% for ano in anos %}
+                                                        <option value="{{ ano }}">{{ ano }}</option>
+                                                     {% endfor %}
+                                                     </select>
+                                                 </div>
+                                              </div>
                                               <div class="form-row hoje  ">
                        							 	<div> 
                                                     	<label >Relat&oacute;rio de hoje </label>	
                                         					<input type="checkbox" name="hoje" id = 'id_hoje' value="1">
                                                      </div>
                                                </div>
-                                              
+                                               <div class="form-row mes  ">
+                       							 	<div> 
+                                                    	<label >Relat&oacute;rio do Mes </label>	
+                                        					<input type="checkbox" name="mes" id = 'id_mes' value="1">
+                                                     </div>
+                                               </div>
+                                                
                                                <div class="form-row enviar  ">
                        							 	<div style="float:right"> 
                                                        <p><input type="submit" value="Enviar" /></p>
@@ -512,7 +532,7 @@
      									 <table width="100%" id="compras">
                                            <tr>
                                            		<td style="border:none">
-                                                         <a href="/admin/sispag/relatorio_fechar_caixa/?pdf=1&data_inicio={{ data_inicio_str }}&hoje={{ hoje }}" target="_blank"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Imprimir</div></a>
+                                                         <a href="/admin/sispag/relatorio_fechar_caixa/?pdf=1&data_inicio={{ data_inicio_str }}&data_fim={{ data_fim_str }}&hoje={{ hoje }}&mes={{ mes }}" target="_blank"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Imprimir</div></a>
                                                     </td>
                                             	<td style="border:none">
                                                 	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>

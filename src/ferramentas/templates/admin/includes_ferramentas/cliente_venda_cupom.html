@@ -3,139 +3,117 @@
 
 	 {% if request.user.is_authenticated %}
      	{% if vend %}
-                <div >
+                <div align="center" >
                             
 
                                         {% if vend.finalizada %}
                                         	{% if vend.dinheiro_recebido %}
-                                                	<div style="width:150px;color:#000;font:'Times New Roman', Times, serif bold;" id="div">							 
+                                                	<div style="width:150px;color:#000;font:'Times New Roman', Times, serif bold;text-align:center" id="div">							 
                                                     <table width="250px" id= "tabela" border = 0>
 									<tr >
-									  <td style="padding-left:25px;width:60%;border:none;font-size:14px;borderss:none !important" colspan=2>
+									  <td style="padding-left:25px;width:60%;border:none;color:#FFFFFF !important;font-size:14px;borderss:none !important" colspan=2>
                                                         	S  E  R  V  O  G  A  S
                                                         </td>
                                                         
 									</tr>
 										<tr>
-									  <td style="padding-left:20px;width:60%;border:none;font-size:9px;border:none" colspan=2>
+									  <td style="padding-left:20px;width:60%;border:none;color:#FFFFFF !important;font-size:9px;border:none" colspan=2>
                                                         	O AMIGO DA SUA COZINHA
                                                         </td>
                                                         
 									</tr>
 									<tr>
-									  <td style="padding-left:20px;width:60%;border:none;font-size:13px;border:none" colspan=2>
+									  <td style="padding-left:20px;width:60%;border:none;color:#FFFFFF !important;font-size:13px;border:none" colspan=2>
                                                         	3371-0603 / 3352-2180
                                                         </td>
                                                         
 									</tr>
 										<tr>
-									  <td style="padding-left:25px;width:60%;border:none;font-size:9px;border:none" colspan=2>
+									  <td style="padding-left:25px;width:60%;border:none;color:#FFFFFF !important;font-size:9px;border:none" colspan=2>
                                                         	CONJ. GURIATA B10-14
                                                         </td>
                                                         
 									</tr>
 									<tr>
-									  <td style="width:60%;border:none;border:none">
-                                                        	N: 
-                                                        </td>
-                                                        <td style="border:none;border:none">
-                                                        	{{ vend.cliente.id}}
-                                                        </td>
-									</tr>
-									<tr>
-									  <td style="width:60%;border:none;border:none">
+									  <td style="width:60%;border:none;color:#FFFFFF !important;border:none">
                                                         	CLIENTE: 
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	{{ vend.cliente.nome|upper}}
                                                         </td>
 									</tr>
 									<tr>
-									  <td style="width:60%;border:none;border:none">
+									  <td style="width:60%;border:none;color:#FFFFFF !important;border:none">
                                                         	END: 
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	{{ vend.cliente.logradouro|upper}}
                                                         </td>
 									</tr>
 									<tr>
-									  <td style="width:60%;border:none;border:none">
+									  <td style="width:60%;border:none;color:#FFFFFF !important;border:none">
                                                         	TEL: 
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	{{ vend.cliente.telefone}}
                                                         </td>
 									</tr>
 
                                                     <tr >
-                                                    	<td style="width:60%;border:none;border:none">
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important;border:none">
                                                         	TOTAL
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	R$ {{vend.total}}
                                                         </td>
                                                     </tr>
-									 <tr>
-                                                    	<td style="border:none;border:none">
+                                                    <tr>
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important;border:none">
+                                                        	VALOR PAGO
+                                                        </td>
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
+                                                        	R$ {{ vend.valor_pago}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                    	<td style="border:none;color:#FFFFFF !important;border:none">
                                                         	{% ifequal vend.pagamento '2' %}
                                                             	{% if desconto %} DEVENDO {% else %} TROCO {% endif %}
                                                             {% else %} 
                                                         		{% if desconto %} DESCONTO {% else %} TROCO {% endif %}
                                                             {% endifequal %}
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	R$ {{vend.troco}}
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                    	<td style="width:60%;border:none;border:none">
-                                                        	VALOR PAGO
-                                                        </td>
-                                                        <td style="border:none;border:none">
-                                                        	R$ {{ vend.valor_pago}}
-                                                        </td>
-                                                    </tr>
-                                                   
                                                     
                                                     <tr>
-                                                    	<td style="width:60%;border:none;border:none">
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important;border:none">
                                                         	CAIXA
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	{{ vend.vendedor.nome|upper }}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                    	<td style="width:60%;border:none;border:none">
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important;border:none">
                                                         	ENTREGADOR
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	{{ vend.entregador.nome|upper }}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                    	<td style="width:60%;border:none;border:none">
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important;border:none">
                                                         	DATA HORA
                                                         </td>
-                                                        <td style="border:none;border:none">
+                                                        <td style="border:none;color:#FFFFFF !important;border:none">
                                                         	{{ vend.data_venda|date:"d/m/Y" }} &Agrave;S {{ vend.data_venda|time:"H:i"}}h                                                        </td>
                                                     </tr>
-										<tr>
-									  <td style="padding-left:15px;width:60%;border:none;font-size:12px;border:none" colspan=2>
-                                                        	________________________
-                                                        </td>
-                                                        
-									</tr>
-<tr>
-									  <td style="padding-left:40px;width:60%;border:none;font-size:12px;border:none" colspan=2>
-                                                        	Assinatura
-                                                        </td>
-                                                        
-									</tr>
-
 									<tr>
-									  <td style="padding-left:05px;width:60%;border:none;font-size:16px;border:none" colspan=2>
-                                                        	OBRIGADO,LIGUE SEMPRE!
+									  <td style="padding-left:15px;width:60%;border:none;color:#FFFFFF !important;font-size:12px;border:none" colspan=2>
+                                                        	OBRIGADO, VOLTE SEMPRE!
                                                         </td>
                                                         
 									</tr>

@@ -32,8 +32,8 @@ urlpatterns = patterns('',
     (r'^admin/sispag/relatorio_vendas/', 'sispag.views.relatorio_vendas'),
     (r'^admin/sispag/relatorio_entradas/', 'sispag.views.relatorio_entradas'),
     (r'^admin/sispag/relatorio_aniversariantes/', 'sispag.views.relatorio_aniversariantes'),
-
-
+    (r'^admin/sispag/cliente_venda_cupom/(?P<venda>\d+)/$', 'sispag.views.cliente_venda_cupom'),
+    (r'^admin/sispag/cliente_venda_prazo_cupom/(?P<venda>\d+)/$', 'sispag.views.cliente_venda_prazo_cupom'),
     (r'^admin/(.*)', admin.site.root),
     #(r'^salvar_mensagem/$', 'sispag.views.salvar_mensagem'),
     #(r'^boleto/', include('boleto.urls')),

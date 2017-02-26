@@ -371,7 +371,6 @@ body {
 /* - Center Conteiner Style - */
 .post {
 	width:526px;
-	position:relative;
 	z-index:117;
 	margin: 44px auto 0px;
 	border-bottom: 2px dotted #EEE;

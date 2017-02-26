@@ -102,7 +102,10 @@ class PessoaForm(ModelForm):
                     u.groups.add(grupo[0])      
                 elif tipo == '3':
                     grupo = Group.objects.filter(name='Cliente')
-                    u.groups.add(grupo[0])                
+                    u.groups.add(grupo[0]) 
+                else:
+                    grupo = Group.objects.filter(name='Entregador')
+                    u.groups.add(grupo[0])               
                 u.save()                
                 self.instance.user = u
         else:
@@ -116,6 +119,9 @@ class PessoaForm(ModelForm):
                 self.instance.user.groups.add(grupo[0])      
             elif tipo == '3':
                 grupo = Group.objects.filter(name='Cliente')
+                self.instance.user.groups.add(grupo[0])  
+            else:
+                grupo = Group.objects.filter(name='Entregador')
                 self.instance.user.groups.add(grupo[0])  
             self.instance.user.save()        
         return super(PessoaForm,self).save(*args, **kwargs)
@@ -204,13 +210,10 @@ class RecadoForm(ModelForm):
 
 class VendaPrazoForm(ModelForm):
     
-    ''' def clean_valor_pago(self):
-        if self.cleaned_data['valor_pago'] != 0.0:
-            return self.cleaned_data['valor_pago']
-        raise forms.ValidationError(u'Digite a quantia paga')
-    '''
+   
+    
     def __init__(self, *args, **kwargs):
-        self.base_fields['previsao_pagamento'].widget = SelectDateWidget()
+        self.base_fields['previsao_pagamento'].widget = SelectDateWidget(years = range(datetime.date.today().year, datetime.date.today().year + 2))
         super(VendaPrazoForm, self).__init__(*args, **kwargs)
 
     
@@ -242,8 +245,16 @@ class VendaForm(ModelForm):
             return self.cleaned_data['valor_pago']
         raise forms.ValidationError(u'Digite a quantia paga')
     '''
+    
+    entregador = forms.ModelChoiceField(queryset=Pessoa.objects.filter(tipo='4'))
+    
+    def clean_entregador(self):
+        if self.cleaned_data['entregador']:
+            return self.cleaned_data['entregador']
+        raise forms.ValidationError(u'Selecione um entregador')
+    
     def __init__(self, *args, **kwargs):
-        self.base_fields['previsao_pagamento'].widget = SelectDateWidget()
+        self.base_fields['previsao_pagamento'].widget = SelectDateWidget(years = range(datetime.date.today().year, datetime.date.today().year + 2))
         super(VendaForm, self).__init__(*args, **kwargs)
 
     

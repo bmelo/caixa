@@ -1,0 +1,23 @@
+ul.ajaxmultiselect_field {
+    padding: 0px;
+    margin: 0px;
+    border: 1px solid #ccc;
+    width: 300px;
+}
+
+ul.ajaxmultiselect_field li {
+    padding: 3px;
+    margin: 1px;
+    list-style: none;
+    background-color: #eee;
+}
+
+img.ajaxmultiselect_add,
+img.ajaxmultiselect_remove {
+    cursor: pointer;
+}
+
+input.ajaxmultiselect_add {
+    width: 90%;
+}
+

@@ -155,12 +155,7 @@ background-color:#FFF;
                                         </td>                                       
                                   		
                                         <td style="border:none">
-                                        	{% if venda.cliente.endereco %}
-                                            	{% for endereco in venda.cliente.endereco %}
-                                            		<div style="padding:0px;font-size:13px;">{{ endereco.logradouro|title }}
-                                                    </div>
-                                            	{% endfor %}
-                                             {% endif%}
+                                        	{{ venda.cliente.logradouro|title }}  
                                         </td>
                                         
                                     
@@ -188,6 +183,9 @@ background-color:#FFF;
 										<br><br>
                                        <table width="100%" id="compras">
                                            <tr>
+                                           		<td style="border:none">
+                                                         <a href="/admin/sispag/relatorio_cliente_atraso/?pdf=1" target="_blank"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Imprimir</div></a>
+                                                    </td>
                                             	<td style="border:none">
                                                 	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
                                                 </td>
@@ -209,6 +207,8 @@ background-color:#FFF;
                 <br><br>
                                        <table width="100%" id="compras">
                                            <tr>
+                                           		
+                                                    
                                             	<td style="border:none">
                                                 	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
                                                 </td>

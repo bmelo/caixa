@@ -13,7 +13,7 @@
                                     <table width="100%" id="produtos">
                                     <tbody>
                                     <tr>
-                                    	<td colspan="2">CLIENTES ENCONTRADOS</td>
+                                    	<td colspan="5">CLIENTES ENCONTRADOS</td>
                                     </tr>
                                     <tr>
                                         <th  style="width:10% !important">
@@ -34,14 +34,14 @@
                                     </tr>
                                     {% for cliente in pessoas %}
                                     <tr class="{% cycle 'row2' 'row1'%}">
-							<td>
+							<td style="border-right:1px">
 								{{ cliente.id }}
 							</td>
-                                        <td  style="border:none">
-                                            <div style="padding:0px;font-size:13px;"><a href="/admin/sispag/cliente/?id={{cliente.id}}">{{ cliente.nome|title}}</div>
+                                        <td  style="border-right:1px"
+                                            <div style="padding:0px;font-size:13px;">{{ cliente.nome|title}}</div>
                                         </td>                                       
                                   		
-                                        <td style="border:none">
+                                        <td style="border-right:1px"
                                         	
                                             		<div style="padding:0px;font-size:13px;">{{ cliente.logradouro|title }}
                                                     </div>
@@ -50,12 +50,12 @@
                                         
                                     {% if cliente.telefone %}
                                     
-                                        <td style="border:none">
+                                        <td style="border-right:1px">
                                             <div style="padding:0px;font-size:13px;">{{ cliente.telefone}}</div>
                                         </td>                                       
                                       {% if cliente.celular %}
                                         
-                                            <td  style="border:none">
+                                            <td  style="border-right:1px">
                                                 <div style="padding:0px;font-size:13px;">{{ cliente.celular}}</div>
                                             </td>                                       
                                        
@@ -69,19 +69,6 @@
                                        
 
 										<br><br>
-                                       <table width="100%" id="compras">
-                                           <tr>
-                                            	<td style="border:none">
-                                                	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
-                                                </td>
-                                            </tr>
-                                            
-                                            </table> 
-                                      
-
-
-
-
 
                                        <br>
                                 	

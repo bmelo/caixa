@@ -144,12 +144,7 @@ background-color:#FFF;
                                         <th  style="width:30% !important">
                                         	Endereco
                                         </th>
-                                        <th  style="width:20% !important">
-                                        	Telefone
-                                        </th>
-                                        <th>
-                                        	Celular
-                                        </th>
+                                        
                                     </tr>
                                     {% for cliente in pessoas %}
                                     <tr class="{% cycle 'row2' 'row1'%}">
@@ -167,20 +162,9 @@ background-color:#FFF;
                                             	
                                         </td>
                                         
-                                    {% if cliente.telefone %}
                                     
-                                        <td style="border:none">
-                                            <div style="padding:0px;font-size:13px;">{{ cliente.telefone}}</div>
-                                        </td>                                       
-                                      {% if cliente.celular %}
-                                        
-                                            <td  style="border:none">
-                                                <div style="padding:0px;font-size:13px;">{{ cliente.celular}}</div>
-                                            </td>                                       
-                                       
-                                     {% endif %}
                                     </tr>
-                                    {% endif %}
+                                    
                                     {% endfor %}
                                     </tbody>
                                 </table>
@@ -194,7 +178,12 @@ background-color:#FFF;
                                                 	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
                                                 </td>
                                             </tr>
-                                            
+                                            <tr>
+                                            	<td style="border:none">
+                                                	 <a href="/admin/sispag/cliente_nome/?nome={{nome}}&pdf=1" target="_blank" ><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Imprimir</div></a>
+                                                </td>
+                                            </tr>
+
                                             </table> 
                                       
 

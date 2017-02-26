@@ -41,6 +41,28 @@
 	-moz-border-radius: 5px; -webkit-border-radius: 5px;
 }
 
+
+#content-related-lojas {
+	
+	width: 30em !important;
+	margin:0px;
+	padding: 0 0 5px 0;
+	margin:0 0 10px 0;
+	border: 1px solid #EEEEEE;
+	-moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+
+
+#content-related-mlojas {
+	
+	width: 30em !important;
+	margin:0px;
+	padding: 0 0 5px 0;
+	margin:0 0 10px 0;
+	border: 1px solid #EEEEEE;
+	-moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+
 .menus{
 	padding: 0 5px 5px 5px;
 	margin:0 0 10px 0;
@@ -265,6 +287,7 @@ div.breadcrumbs {
     font-size: 11px !important; text-align: left !important;
     border-top: 1px solid #ccc !important;
     border-bottom: 1px solid #ccc !important;
+	margin-bottom: 210px;
 }
 
 #logo{
@@ -1257,7 +1280,7 @@ ul.timelist, .timelist li {
 /* Login
 ----------------------------------------------------------------------- */
 
-body.login { background: #fff !important; }
+
 .login #container {
     border: none !important;
     -moz-border-radius: 5px !important; -webkit-border-radius: 5px !important;
@@ -1315,10 +1338,109 @@ body.login { background: #fff !important; }
 margin-bottom:10px;
 }
 
-#logo_inmeq{
-background-color:#CCCCCC;
+.fotos{
+width:60px;
+float:left;
+text-align:center;
+padding:10px;
 }
 
-#corpo_noticia{
-padding: 0 10px;
+.foto_produto{
+width:100px;
+height:100px;
+text-align:center;
+padding:10px;
+border:solid 5px #eee;
+float:left;
+}
+
+.foto_produto_grande{
+width:200px;
+height:200px;
+text-align:center;
+padding:10px;
+border:solid 5px #eee;
+}
+
+.list_foto{
+width:25px;
+height:25px;
+text-align:center;
+padding:10px;
+margin-left:5px;
+border:solid 5px #eee;
+}
+
+.foto_produto_usuario{
+width:60px;
+height:60px;
+text-align:center;
+padding:10px;
+border:solid 2px #eee;
+
+}
+
+.foto_produto_loja{
+width:100px;
+height:100px;
+text-align:center;
+padding:10px;
+float:left;
+}
+
+.prod_grande{
+height: 400px;
+text-align:center;
+padding:10px;
+margin:10px;
+
+}
+
+.prod{
+width:130px;
+height: 200px;
+float:left;
+text-align:center;
+padding:10px;
+margin:10px;
+
+}
+
+.prod_msg{
+width:95%;
+float:left;
+text-align:center;
+padding:10px;
+margin:10px 0 10px 0;
+border-bottom:dotted 2px #eee;
+
+}
+
+.f1{
+background-color:#F5F5F5;
+}
+.f2{
+background-color:#FFFFFF;
+}
+.produto_nome{
+color:#CCCCCC;
+font-size:11px;
+font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+.produto_valor{
+color:#0099CC;
+font-size:10px;
+font-family:Georgia, "Times New Roman", Times, serif;
+}
+.produto_categoria{
+color:#CCCCCC;
+font-size:10px;
+font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+.produto_descricao{
+color:#3B5998;
+font-size:11px;
+font-family:Arial, Helvetica, sans-serif;
 }

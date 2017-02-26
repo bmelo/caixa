@@ -128,8 +128,8 @@ background-color:#FFF;
         {% else %}
                 
                  <div align="center" >
-                                         <div style="padding-top:10px;font-size:24px;text-align:center">REL&Aacute;TORIO DE ENTRADAS</div> <br> <br>
-                                               
+ <div style="padding-top:10px;font-size:24px;text-align:center">REL&Aacute;TORIO DE ENTRADAS DE MERCADORIAS {% if hoje %} DE HOJE {% now "j" %} de {% now "F" %} de {% now "Y" %} 
+{% else%}{% if mes %} DO M&Ecirc;S {% now "F"%} de {% now "Y"%}  {% else %}{% if data_inicio and data_fim %} - {{ data_inicio|date:"d/m/Y" }} - {{ data_fim|date:"d/m/Y"}}{% endif %}{% endif %}{% endif %} </div> <br> <br>                                               
     <div class="app" style="padding-left:20px">
                                      <div id="changelist" class="module filtered">
                                     <table width="100%" id="produtos">
@@ -167,16 +167,7 @@ background-color:#FFF;
                                             </td>
                                          </tr>
                                        {% else %}
-                                       <tr class="row2">
-                                              <td>
-                                                    
-                                              </td>
-                                                <td>
-                                                    
-                                                </td>
-                                                <td>
-                                                </td>
-                                            </tr>
+                                       
                                          
                                          <tr>
                                             <td colspan="2">
@@ -322,6 +313,12 @@ background-color:#FFF;
                                         					<input type="checkbox" name="hoje" id = 'id_hoje' value="1">
                                                      </div>
                                                </div>
+                                                <div class="form-row mes  ">
+                       							 	<div> 
+                                                    	<label >Relat&oacute;rio do Mes </label>	
+                                        					<input type="checkbox" name="mes" id = 'id_mes' value="1">
+                                                     </div>
+                                               </div>
                                                 <div class="form-row enviar  ">
                        							 	<div style="float:right"> 
                                                        <p><input type="submit" value="Enviar" /></p>
@@ -333,6 +330,11 @@ background-color:#FFF;
                                       
                                       <table width="100%" id="compras">
                                            <tr>
+                                           {% if data_inicio_str and data_fim_str %}
+                                                    <td style="border:none">
+                                                         <a href="/admin/sispag/relatorio_entradas/?pdf=1&data_inicio={{ data_inicio_str }}&data_fim={{ data_fim_str }}&hoje={{ hoje }}&mes={{ mes }}" target="_blank"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Imprimir</div></a>
+                                                    </td>
+                                                {% endif %}
                                             	<td style="border:none">
                                                 	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Voltar</div></a>
                                                 </td>

@@ -154,9 +154,9 @@ width:40px !important;
                                         </div>                                 
                                        
                                      {% endif %}
-                                    <div class="form-row data_nascimento ">
+                                    <div class="form-row observacao">
                                             <div>                                                                                        
-                                                DATA DE NASCIMENTO: {{ vend.cliente.data_nascimento|date:"d/m/Y" }}
+                                                OBSERVACAO: <font color=red>{{ vend.cliente.observacao}}</font>
                                             </div>
                                      </div>
                                    </fieldset>
@@ -220,9 +220,9 @@ width:40px !important;
                                         {% if vend.finalizada %}
                                         	{% if vend.dinheiro_recebido %}
                                                 	<div style="padding:10px;background-color:#3399CC;width:200px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">														 
-                                                    <table  >
-                                                    <tr>
-                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                    <table width="100%"  >
+                                                    <tr >
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important">
                                                         	TOTAL
                                                         </td>
                                                         <td style="border:none;color:#FFFFFF !important">
@@ -230,7 +230,7 @@ width:40px !important;
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important">
                                                         	VALOR PAGO
                                                         </td>
                                                         <td style="border:none;color:#FFFFFF !important">
@@ -250,11 +250,19 @@ width:40px !important;
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                    	<td style="border:none;color:#FFFFFF !important">
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important">
                                                         	CAIXA
                                                         </td>
                                                         <td style="border:none;color:#FFFFFF !important">
                                                         	{{ vend.vendedor.nome|upper }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                    	<td style="width:60%;border:none;color:#FFFFFF !important">
+                                                        	ENTREGADOR
+                                                        </td>
+                                                        <td style="border:none;color:#FFFFFF !important">
+                                                        	{{ vend.entregador.nome|upper }}
                                                         </td>
                                                     </tr>
                                                     </table>
@@ -318,6 +326,12 @@ width:40px !important;
                                                             <div>
                                                            		<label for="id_valor_pago">Valor Pago: R$</label>
                                                                 {{ v.valor_pago }}{{ v.valor_pago.errors }}
+                                                            </div>
+                                                       </div>
+                                                       <div class="form-row entregador ">
+                                                            <div>
+                                                           		<label for="id_entregador">Entregador:</label>
+                                                                {{ v.entregador }}{{ v.entregador.errors }}
                                                             </div>
                                                        </div>
                                                          <div class="form-row concluir ">
@@ -427,7 +441,7 @@ width:40px !important;
                                                 	 <a href="/admin/sispag/cancelar_venda/{{vend.id}}/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Cancelar venda</div></a>
                                                 </td>
                                                 <td style="border:none">
-                                                	 <a href="/admin/"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Inicio</div></a>
+                                                	 <a href="/admin/sispag/cliente_venda_cupom/{{vend.id}}/" target = "_blank"><div style="padding:10px;background-color:#3399CC;width:150px;color:#FFFFFF;font:'Times New Roman', Times, serif 15px bold;text-align:center">Imprimir cupom</div></a>
                                                 </td>
                                             </tr>
                                             
